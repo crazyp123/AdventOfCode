@@ -6,7 +6,7 @@ namespace AdventOfCode
 {
     public class Day1
     {
-        protected List<int> Ints = new List<int> { 0 };
+        private readonly List<int> _ints = new List<int> { 0 };
 
         public Day1(List<int> input)
         {
@@ -26,15 +26,15 @@ namespace AdventOfCode
         {
             foreach (var num in input)
             {
-                var z = Ints.Last() + num;
+                var z = _ints.Last() + num;
 
-                if (Ints.Contains(z))
+                if (_ints.Contains(z))
                 {
                     Console.WriteLine($"Day 1 (2/2) Answer is: {z}");
                     return true;
                 }
 
-                Ints.Add(z);
+                _ints.Add(z);
             }
             return false;
         }
