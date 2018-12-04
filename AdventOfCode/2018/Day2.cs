@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode
+namespace AdventOfCode._2018
 {
     public class Day2
     {
         private List<string> _input;
 
-        public Day2(List<string> input)
+        public Day2()
         {
-            _input = input;
+            _input = Utils.GetInput(2018, 2).AsListOf<string>();
 
             Part1();
             Part2();

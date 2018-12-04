@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AdventOfCode._2018;
 
 namespace AdventOfCode
 {
@@ -14,11 +15,8 @@ namespace AdventOfCode
         [STAThread]
         static void Main(string[] args)
         {
-            var input = Utils.GetInput(2018, 1);
-
-            // new Day1(input.AsListOf<int>());
-
-            new Day2(Utils.GetInput(2018, 2).AsListOf<string>());
+            new Day1();
+            new Day2();
 
             Console.WriteLine("\n\n\n...press any key to exit");
             Console.ReadKey();

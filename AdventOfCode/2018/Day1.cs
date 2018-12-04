@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AdventOfCode
+namespace AdventOfCode._2018
 {
     public class Day1
     {
         private readonly List<int> _ints = new List<int> { 0 };
 
-        public Day1(List<int> input)
+        public Day1()
         {
+            var input = Utils.GetInput(2018, 1).AsListOf<int>();
+
             Part1(input);
 
             while (!Part2(input))
