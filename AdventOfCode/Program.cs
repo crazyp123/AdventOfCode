@@ -8,9 +8,9 @@ namespace AdventOfCode
         [STAThread]
         static void Main(string[] args)
         {
-            new Day1();
-            new Day2();
-
+            //  new Day1();
+            //  new Day2();
+            new Day3();
             Console.WriteLine("\n\n\n...press any key to exit");
             Console.ReadKey();
         }
