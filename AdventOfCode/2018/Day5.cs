@@ -19,8 +19,8 @@ namespace AdventOfCode._2018
 
         void Part1()
         {
-            var reacted = Reduce(Input);
-            Console.WriteLine($"Day 5 (1/2) Answer is: {reacted.Length}");
+            var reacted = Reduce(Input.ToList());
+            Console.WriteLine($"Day 5 (1/2) Answer is: {reacted}");
         }
 
         void Part2()
@@ -30,30 +30,30 @@ namespace AdventOfCode._2018
 
             foreach (var x in alpha)
             {
-                var clean = Clean(Input, x.ToString());
+                var clean = Clean(Input, x);
                 var reacted = Reduce(clean);
-                results.Add(reacted.Length);
+                results.Add(reacted);
             }
 
             Console.WriteLine($"Day 5 (2/2) Answer is: {results.Min()}");
         }
 
-        string Clean(string input, string x)
+        List<char> Clean(string input, char x)
         {
-            return input.Replace(x.ToLower(), "").Replace(x.ToUpper(), "");
+            return input.Where(c => c != char.ToLower(x) && c != char.ToUpper(x)).ToList();
         }
 
-        string Reduce(string value)
+        int Reduce(List<char> x)
         {
-            for (int i = 0; i < value.Length-1; i++)
+            for (int i = 0; i < x.Count-1; i++)
             {
-                if (IsOpposite(value[i], value[i + 1]))
+                if (IsOpposite(x[i], x[i + 1]))
                 {
-                    value = value.Remove(i, 2);
+                    x.RemoveRange(i, 2);
                     i = Math.Max(i - 2, -1);
                 }
             }
-            return value;
+            return x.Count;
         }
 
         public bool IsOpposite(char x, char y)
