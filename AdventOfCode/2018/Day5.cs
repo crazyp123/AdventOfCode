@@ -20,22 +20,20 @@ namespace AdventOfCode._2018
         void Part1()
         {
             var reacted = Reduce(Input.ToList());
-            Console.WriteLine($"Day 5 (1/2) Answer is: {reacted}");
+            Utils.Answer(5,1,reacted);
         }
 
         void Part2()
         {
-            var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var results = new List<int>();
-
-            foreach (var x in alpha)
+            for (var x = 'a'; x <= 'z'; x++)
             {
                 var clean = Clean(Input, x);
                 var reacted = Reduce(clean);
                 results.Add(reacted);
             }
 
-            Console.WriteLine($"Day 5 (2/2) Answer is: {results.Min()}");
+            Utils.Answer(5,2,results.Min());
         }
 
         List<char> Clean(string input, char x)

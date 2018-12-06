@@ -20,5 +20,10 @@ namespace Tests
             Assert.IsFalse(x.IsOpposite('c', 'A'));
             Assert.IsFalse(x.IsOpposite('X', 'f'));
         }
+
+        public void Test2()
+        {
+
+        }
     }
 }

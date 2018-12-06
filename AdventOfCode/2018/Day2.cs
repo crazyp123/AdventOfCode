@@ -29,7 +29,7 @@ namespace AdventOfCode._2018
                 if (duplicates.Contains(3)) threes++;
             }
 
-            Console.WriteLine($"Day 2 (1/2) Answers is: {twos * threes}");
+            Utils.Answer(2,1, twos * threes);
         }
 
         void Part2()
@@ -43,7 +43,7 @@ namespace AdventOfCode._2018
                     var common = s.Where((c, i) => s2[i] == c).ToArray();
                     if (common.Length == lenght - 1)
                     {
-                        Console.WriteLine($"Day 2 (2/2) Answers is: {new string(common)}");
+                        Utils.Answer(2,2, new string(common));
                         return;
                     }
                 }

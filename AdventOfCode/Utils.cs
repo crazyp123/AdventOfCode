@@ -9,7 +9,7 @@ namespace AdventOfCode
     public static class Utils
     {
         // your logged in session cookie (taken from browser)
-        private static readonly string _session;
+        public static readonly string _session;
 
         static Utils()
         {
@@ -20,12 +20,17 @@ namespace AdventOfCode
         {
             var webClient = new WebClient();
             webClient.Headers.Add(HttpRequestHeader.Cookie, $"session={_session}");
-            return webClient.DownloadString($"http://adventofcode.com/{year}/day/{day}/input");
+            return webClient.DownloadString($"http://adventofcode.com/{year}/day/{day}/input").Trim();
         }
 
         public static List<T> AsListOf<T>(this string i, char separator = '\n')
         {
             return i.Split(separator).Where(s => !string.IsNullOrWhiteSpace(s)).Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
+        }
+
+        public static void Answer(int day, int part, object result)
+        {
+            Console.WriteLine($"Day {day} ({part}/2) Answer is: {result} ");
         }
     }
 }

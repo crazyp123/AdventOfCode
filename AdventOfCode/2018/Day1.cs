@@ -13,32 +13,34 @@ namespace AdventOfCode._2018
             var input = Utils.GetInput(2018, 1).AsListOf<int>();
 
             Part1(input);
-
-            while (!Part2(input))
-            {
-            }
+            Part2(input);
         }
 
         private void Part1(List<int> input)
         {
-            Console.WriteLine($"Day 1 (1/2) Answer is: {input.Sum()}");
+            Utils.Answer(1,1, input.Sum());
         }
 
-        private bool Part2(List<int> input)
+        private void Part2(List<int> input)
         {
-            foreach (var num in input)
+            var answer = 0;
+            var found = false;
+            while (!found)
             {
-                var z = _ints.Last() + num;
-
-                if (_ints.Contains(z))
+                foreach (var num in input)
                 {
-                    Console.WriteLine($"Day 1 (2/2) Answer is: {z}");
-                    return true;
-                }
+                    var z = _ints.Last() + num;
 
-                _ints.Add(z);
+                    if (_ints.Contains(z))
+                    {
+                        answer = z;
+                        found = true;
+                    }
+
+                    _ints.Add(z);
+                }
             }
-            return false;
+            Utils.Answer(1,2, answer);
         }
     }
 }

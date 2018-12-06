@@ -63,7 +63,7 @@ namespace AdventOfCode._2018
 
             var moreFrequentMin = mostAsleep.Value.GroupBy(min => min).OrderByDescending(mins => mins.Count()).First().Key;
 
-            Console.WriteLine($"Day 4 (1/2) Answer is: {mostAsleep.Key * moreFrequentMin}");
+            Utils.Answer(4, 1, mostAsleep.Key * moreFrequentMin);
         }
 
         void Part2()
@@ -74,7 +74,7 @@ namespace AdventOfCode._2018
 
             var moreFrequentMin = mostAsleepAtSameMin.Value.GroupBy(i => i).OrderByDescending(ints => ints.Count()).First().Key;
 
-            Console.WriteLine($"Day 4 (2/2) Answer is: {mostAsleepAtSameMin.Key * moreFrequentMin}");
+            Utils.Answer(4,2, mostAsleepAtSameMin.Key * moreFrequentMin);
         }
 
         ShiftLog ParseLog(string s)

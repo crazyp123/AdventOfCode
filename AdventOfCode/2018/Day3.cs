@@ -55,7 +55,7 @@ namespace AdventOfCode._2018
                 }
             }
 
-            Console.WriteLine($"Day 3 (1/2) Answer is: {overlaps}");
+            Utils.Answer(3,1, overlaps);
         }
 
         void Part2()
@@ -97,8 +97,8 @@ namespace AdventOfCode._2018
 
                 if (intact)
                 {
-                    Console.WriteLine($"Day 3 (2/2) Answer is: {claim.id}");
-                    return;
+                   Utils.Answer(3,2, claim.id);
+                   return;
                 }
             }
         }
