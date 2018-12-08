@@ -1,66 +1,152 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace AdventOfCode._2018
 {
     public class Day7
     {
-        protected internal Dictionary<char, List<char>> Instructions;
+        private Dictionary<char, Node> Nodes;
+        private List<Instr> Instructions;
+        private List<char?>[] _workers;
 
         public Day7()
         {
-            var instrs = Utils.GetInput(2018, 7).AsListOf<string>()
+            Instructions = Utils.GetInput(2018, 7).AsListOf<string>()
                 .Select(s => s.Split(' ').Where(s1 => s1.Length == 1 && char.IsUpper(s1[0])).ToArray())
-                .Select(strings => new Instr(strings[0][0], strings[1][0]));
+                .Select(strings => new Instr(strings[0][0], strings[1][0]))
+                .ToList();
 
-            Instructions = instrs
-                .GroupBy(instr => instr.Y)
-                .ToDictionary(x => x.Key, x => x.Any() ? x.Select(instr => instr.X).ToList() : new List<char>());
+            setup();
 
-             foreach (var c1 in instrs
-                 .SelectMany(instr => new List<char> {instr.X, instr.Y})
-                 .Distinct()
-                 .Where(c => !Instructions.ContainsKey(c)))
-             {
-                 Instructions.Add(c1, new List<char>());
-             }
 
             Part1();
+
+            setup();
+
+            Part2();
+        }
+
+        private void setup()
+        {
+            Nodes = Instructions
+                .SelectMany(instr => new List<char> { instr.X, instr.Y })
+                .Distinct()
+                .OrderBy(c => c)
+                .ToDictionary(c => c, c => new Node
+                {
+                    Id = c,
+                });
+
+            foreach (var i in Instructions)
+            {
+                Nodes[i.Y].Links.Add(Nodes[i.X]);
+            }
         }
 
 
         void Part1()
         {
-            var available = new List<char>(Instructions.Where(pair => pair.Value.Count == 0).Select(pair => pair.Key));
-            foreach (var VARIABLE in available)
+            var answer = "";
+
+            while (answer.Length != Nodes.Count)
             {
-                Instructions.Remove(VARIABLE);
-            }
-            var final = "";
+                var next = GetNext();
 
-            while (available.Count > 0)
-            {
-                var next = available[0];
-                final += next;
-                available.RemoveAt(0);
+                answer += next;
 
-                foreach (var i in Instructions)
-                {
-                    i.Value.RemoveAll(c => c == next);
-                }
-
-                available.AddRange(Instructions.Where(pair => pair.Value.Count == 0).Select(pair => pair.Key));
-                available = available.OrderBy(c => c).ToList();
-                foreach (var VARIABLE in available)
-                {
-                    Instructions.Remove(VARIABLE);
-                }
+                Nodes[next].Done = true;
             }
 
-            Utils.Answer(7, 1, final);
+            Utils.Answer(7, 1, answer);
+        }
+
+        void Part2()
+        {
+            var workers = Enumerable.Range(0, 5).Select(i => new Worker()).ToList();
+
+            var answer = "";
+            int s = 0;
+            while (answer.Length != Nodes.Count)
+            {
+                var c = GetNexts();
+                for (var i = 0; i < c.Length; i++)
+                {
+                    var next = c[i];
+
+                    var worker = workers.FirstOrDefault(w => w.Free());
+                    if (worker == null) break;
+
+                    worker.Node = Nodes[next];
+                    worker.Node.Taken = true;
+                }
+
+                workers.ForEach(w =>
+                {
+                    if (w.Tick()) answer += w.Node.Id;
+                });
+                s++;
+            }
+
+            Utils.Answer(7, 2, s);
+        }
+
+        char GetNext()
+        {
+            return Nodes.First(pair => !pair.Value.Done && pair.Value.CanDo()).Key;
+        }
+
+        char[] GetNexts()
+        {
+            return Nodes.Where(pair => !pair.Value.Done && !pair.Value.Taken && pair.Value.CanDo()).Select(pair => pair.Key).ToArray();
+        }
+
+        public class Worker
+        {
+            public Node Node;
+            private int n = 0;
+
+            public bool Free()
+            {
+                return Node == null || Node.Done;
+            }
+
+            public bool Tick()
+            {
+                if (Node == null || Node.Done) return false;
+
+                n++;
+
+                if (Pos() + 60 == n)
+                {
+                    Node.Done = true;
+                    n = 0;
+                    return true;
+                }
+
+                return false;
+            }
+
+            int Pos()
+            {
+                return char.ToUpper(Node.Id) - 64;
+            }
         }
 
 
+        public class Node
+        {
+            public char Id;
+            public bool Done;
+
+            public bool Taken;
+
+            public HashSet<Node> Links = new HashSet<Node>();
+
+            public bool CanDo() => Links.Count == 0 || Links.All(node => node.Done);
+
+        }
 
 
         public struct Instr
