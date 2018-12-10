@@ -15,7 +15,8 @@ namespace AdventOfCode
             //new Day5();
             //new Day6();
             //new Day7();
-            new Day8();
+            //new Day8();
+            new Day9();
 
             Console.WriteLine("\n\n\n...press any key to exit");
             Console.ReadKey();
