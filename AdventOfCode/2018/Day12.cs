@@ -29,7 +29,7 @@ namespace AdventOfCode._2018
 ###.# => #
 ####. => #";
 
-        protected internal int sides = 100000;
+        protected internal int sides = 500;
 
         public Day12()
         {
@@ -46,9 +46,9 @@ namespace AdventOfCode._2018
 
             Rules = strings.Select(s => new Rule(s)).ToList();
 
-            Part1();
+         //   Part1();
 
-     //       Part2();
+            Part2();
         }
 
         void Part1()
@@ -60,19 +60,23 @@ namespace AdventOfCode._2018
 
         void Part2()
         {
-            var sum = Run(50000000000);
+            var sum2 = Run(96);
+
+            long sum = sum2 + (50000000000 - 96) * 32;
 
             Utils.Answer(12, 2, sum);
         }
 
-        private long Run(long generations)
+        private int Run(int generations)
         {
             var currentGen = InitialState.ToList();
             var next = InitialState.ToList();
 
             var p = 0f;
 
-            for (long gen = 0; gen < generations; gen++)
+            var prevSum = 0;
+
+            for (var gen = 0; gen < generations; gen++)
             {
                 for (int i = 0; i < currentGen.Count; i++)
                 {
@@ -83,29 +87,17 @@ namespace AdventOfCode._2018
                     var r1 = i < currentGen.Count - 1 ? currentGen[i + 1] : '.';
                     var r2 = i < currentGen.Count - 2 ? currentGen[i + 2] : '.';
 
-                    var rule = Rules.FirstOrDefault(r => r.Compatible(l1, l2, current, r1, r2));
-                    if (rule != null)
-                    {
-                        next[i] = rule.Result;
-                    }
-                    else
-                    {
-                        next[i] = '.';
-                    }
+                    var rule = Rules.First(r => r.Compatible(l1, l2, current, r1, r2));
+                    next[i] = rule.Result;
                 }
-
-              //  Console.WriteLine(Sum(currentGen));
 
                 currentGen = next.ToList();
-                var x = (float)gen / generations;
-                if (x - p >= 0.01f)
-                {
-               //    Console.WriteLine(x.ToString("P"));
-                    p = x;
 
-                }
+                var s = Sum(currentGen);
+                
+             //   Console.WriteLine($"diff={prevSum - s} \n {gen}: {s} \n\n");
 
-                //  if (currentGen.All(c => c=='.')) break;
+                prevSum = s;
             }
 
             var sum = Sum(currentGen);
@@ -113,14 +105,17 @@ namespace AdventOfCode._2018
             return sum;
         }
 
-        private  long Sum(List<char> currentGen)
+        private int Sum(List<char> currentGen)
         {
-            long sum = 0;
+            var sum = 0;
             for (int i = 0; i < currentGen.Count; i++)
             {
                 var n = i - sides;
 
-                if (currentGen[i-1] == '#') Console.WriteLine($"{n}: {sum += n}");
+                if (currentGen[i] == '#')
+                {
+                    sum += n;
+                }
             }
 
             return sum;
