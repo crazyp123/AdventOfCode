@@ -33,4 +33,5 @@ namespace AdventOfCode
             Console.WriteLine($"Day {day} ({part}/2) Answer is: {result} ");
         }
     }
+
 }

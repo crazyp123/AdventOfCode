@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day5
     {
@@ -20,7 +21,7 @@ namespace AdventOfCode._2018
         void Part1()
         {
             var reacted = Reduce(Input.ToList());
-            Utils.Answer(5,1,reacted);
+            Utils.Answer(5, 1, reacted);
         }
 
         void Part2()
@@ -33,7 +34,7 @@ namespace AdventOfCode._2018
                 results.Add(reacted);
             }
 
-            Utils.Answer(5,2,results.Min());
+            Utils.Answer(5, 2, results.Min());
         }
 
         List<char> Clean(string input, char x)
@@ -43,7 +44,7 @@ namespace AdventOfCode._2018
 
         int Reduce(List<char> x)
         {
-            for (int i = 0; i < x.Count-1; i++)
+            for (int i = 0; i < x.Count - 1; i++)
             {
                 if (IsOpposite(x[i], x[i + 1]))
                 {

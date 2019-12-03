@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day4
     {
@@ -74,7 +75,7 @@ namespace AdventOfCode._2018
 
             var moreFrequentMin = mostAsleepAtSameMin.Value.GroupBy(i => i).OrderByDescending(ints => ints.Count()).First().Key;
 
-            Utils.Answer(4,2, mostAsleepAtSameMin.Key * moreFrequentMin);
+            Utils.Answer(4, 2, mostAsleepAtSameMin.Key * moreFrequentMin);
         }
 
         ShiftLog ParseLog(string s)
@@ -102,7 +103,7 @@ namespace AdventOfCode._2018
     }
 
     public enum LogType
-    {   
+    {
         WakesUp,
         BeginsShift,
         FallsAsleep

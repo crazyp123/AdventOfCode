@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day11
     {
@@ -69,7 +67,7 @@ namespace AdventOfCode._2018
                         var sum = previousSum + GetOuterSquareSumAt(x, y, s);
                         lock (locker)
                         {
-                            
+
                             if (sum > max)
                             {
                                 max = sum;
@@ -88,7 +86,7 @@ namespace AdventOfCode._2018
         int Compute(int x, int y)
         {
             var rackID = x + 10;
-            var pl =rackID * y;
+            var pl = rackID * y;
             pl += serial;
             pl *= rackID;
             var hundreds = Math.Abs(pl / 100 % 10);

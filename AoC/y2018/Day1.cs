@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day1
     {
@@ -18,7 +18,7 @@ namespace AdventOfCode._2018
 
         private void Part1(List<int> input)
         {
-            Utils.Answer(1,1, input.Sum());
+            Utils.Answer(1, 1, input.Sum());
         }
 
         private void Part2(List<int> input)
@@ -40,7 +40,7 @@ namespace AdventOfCode._2018
                     _ints.Add(z);
                 }
             }
-            Utils.Answer(1,2, answer);
+            Utils.Answer(1, 2, answer);
         }
     }
 }

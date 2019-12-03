@@ -1,32 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using AdventOfCode;
-using AdventOfCode._2018;
+using AoC.y2018;
 
-namespace WinForms
+namespace AoC.Forms
 {
-    public partial class Day10 : Form
+    public partial class D10Form : Form
     {
-        protected internal AdventOfCode._2018.Day10 Data;
+        protected internal Day10 Data;
 
         private int sec = 0;
 
-
-        public Day10()
+        public D10Form()
         {
             InitializeComponent();
 
-            Data = new AdventOfCode._2018.Day10();
+            Data = new Day10();
 
             while (GetLogs().Max(log => log.Position.Item1) - GetLogs().Min(log => log.Position.Item1) > 90)
             {
                 Tick(1);
             }
-
-
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -43,14 +39,14 @@ namespace WinForms
             }
         }
 
-        List<AdventOfCode._2018.Day10.Log> GetLogs()
+        List<Day10.Log> GetLogs()
         {
             return Data.Logs;
         }
 
         private void Tick(int delta)
         {
-            sec+=delta;
+            sec += delta;
             GetLogs().ForEach(log => log.Tick(delta));
 
             Invalidate();
@@ -67,7 +63,7 @@ namespace WinForms
                 Utils.Answer(10, 1, "Read it, press arrows till you can read!");
                 Utils.Answer(10, 2, sec);
             }
-             if (e.KeyCode == Keys.Left)
+            if (e.KeyCode == Keys.Left)
             {
                 Tick(-1);
                 Utils.Answer(10, 1, "Read it, press arrows till you can read!");

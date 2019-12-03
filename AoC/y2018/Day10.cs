@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day10
     {

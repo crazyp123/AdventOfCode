@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day12
     {
@@ -46,7 +46,7 @@ namespace AdventOfCode._2018
 
             Rules = strings.Select(s => new Rule(s)).ToList();
 
-         //   Part1();
+            //   Part1();
 
             Part2();
         }
@@ -94,8 +94,8 @@ namespace AdventOfCode._2018
                 currentGen = next.ToList();
 
                 var s = Sum(currentGen);
-                
-             //   Console.WriteLine($"diff={prevSum - s} \n {gen}: {s} \n\n");
+
+                //   Console.WriteLine($"diff={prevSum - s} \n {gen}: {s} \n\n");
 
                 prevSum = s;
             }
@@ -130,7 +130,7 @@ namespace AdventOfCode._2018
 
             public Rule(string schema)
             {
-                var split = schema.Replace(" ", "").Split("=>".ToCharArray(),StringSplitOptions.RemoveEmptyEntries);
+                var split = schema.Replace(" ", "").Split("=>".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                 _schema = split[0].Trim();
                 Result = split[1].Trim()[0];

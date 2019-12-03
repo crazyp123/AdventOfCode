@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day6
     {
@@ -64,17 +65,17 @@ namespace AdventOfCode._2018
                 .GroupBy(loc => loc.Id)
                 .ToDictionary(group => group.Key, group => group.Count());
 
-            Utils.Answer(6,1, counts.Values.Max());
+            Utils.Answer(6, 1, counts.Values.Max());
         }
 
         void Part2()
         {
             var size = Enumerable.Range(0, _width)
-                .SelectMany(x =>Enumerable.Range(0, _height)
+                .SelectMany(x => Enumerable.Range(0, _height)
                     .Select(y => _input.Sum(p => ManhattanDistance(x, y, p.X, p.Y)) < 10000 ? 1 : 0))
                 .Sum();
 
-            Utils.Answer(6,2,size);
+            Utils.Answer(6, 2, size);
         }
 
         int ManhattanDistance(int x1, int y1, int x2, int y2)

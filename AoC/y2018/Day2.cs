@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using AdventOfCode;
 
-namespace AdventOfCode._2018
+namespace AoC.y2018
 {
     public class Day2
     {
@@ -29,7 +29,7 @@ namespace AdventOfCode._2018
                 if (duplicates.Contains(3)) threes++;
             }
 
-            Utils.Answer(2,1, twos * threes);
+            Utils.Answer(2, 1, twos * threes);
         }
 
         void Part2()
@@ -43,7 +43,7 @@ namespace AdventOfCode._2018
                     var common = s.Where((c, i) => s2[i] == c).ToArray();
                     if (common.Length == lenght - 1)
                     {
-                        Utils.Answer(2,2, new string(common));
+                        Utils.Answer(2, 2, new string(common));
                         return;
                     }
                 }
