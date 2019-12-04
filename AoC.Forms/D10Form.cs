@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using AdventOfCode;
 using AoC.y2018;
 
 namespace AoC.Forms
@@ -60,14 +59,14 @@ namespace AoC.Forms
             if (e.KeyCode == Keys.Right)
             {
                 Tick(1);
-                Utils.Answer(10, 1, "Read it, press arrows till you can read!");
-                Utils.Answer(10, 2, sec);
+                Utils.Utils.Answer(10, 1, "Read it, press arrows till you can read!");
+                Utils.Utils.Answer(10, 2, sec);
             }
             if (e.KeyCode == Keys.Left)
             {
                 Tick(-1);
-                Utils.Answer(10, 1, "Read it, press arrows till you can read!");
-                Utils.Answer(10, 2, sec);
+                Utils.Utils.Answer(10, 1, "Read it, press arrows till you can read!");
+                Utils.Utils.Answer(10, 2, sec);
             }
         }
     }

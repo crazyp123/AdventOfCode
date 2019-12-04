@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -12,7 +12,7 @@ namespace AoC.y2018
         public Day10()
         {
             var regex = new Regex(@"(\-*\d+)");
-            Logs = Utils.GetInput(2018, 10).AsListOf<string>().Select(s =>
+            Logs = Utils.Utils.GetInput(2018, 10).AsListOf<string>().Select(s =>
             {
                 var matches = regex.Matches(s);
                 return new Log((matches[0].Value, matches[1].Value), (matches[2].Value, matches[3].Value));

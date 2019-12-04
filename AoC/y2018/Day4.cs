@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -13,7 +13,7 @@ namespace AoC.y2018
 
         public Day4()
         {
-            var input = Utils.GetInput(2018, 4).AsListOf<string>();
+            var input = Utils.Utils.GetInput(2018, 4).AsListOf<string>();
 
             _logs = input.Select(ParseLog).OrderBy(log => log.Time).ToList();
 
@@ -64,7 +64,7 @@ namespace AoC.y2018
 
             var moreFrequentMin = mostAsleep.Value.GroupBy(min => min).OrderByDescending(mins => mins.Count()).First().Key;
 
-            Utils.Answer(4, 1, mostAsleep.Key * moreFrequentMin);
+            Utils.Utils.Answer(4, 1, mostAsleep.Key * moreFrequentMin);
         }
 
         void Part2()
@@ -75,7 +75,7 @@ namespace AoC.y2018
 
             var moreFrequentMin = mostAsleepAtSameMin.Value.GroupBy(i => i).OrderByDescending(ints => ints.Count()).First().Key;
 
-            Utils.Answer(4, 2, mostAsleepAtSameMin.Key * moreFrequentMin);
+            Utils.Utils.Answer(4, 2, mostAsleepAtSameMin.Key * moreFrequentMin);
         }
 
         ShiftLog ParseLog(string s)

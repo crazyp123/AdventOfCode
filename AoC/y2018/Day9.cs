@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
 
 namespace AoC.y2018
 {
@@ -41,7 +40,7 @@ namespace AoC.y2018
             }
 
 
-            Utils.Answer(9, 1, scores.Max());
+            Utils.Utils.Answer(9, 1, scores.Max());
         }
 
         void Part2()
@@ -54,7 +53,7 @@ namespace AoC.y2018
             }
 
 
-            Utils.Answer(9, 2, scores.Max());
+            Utils.Utils.Answer(9, 2, scores.Max());
         }
 
 

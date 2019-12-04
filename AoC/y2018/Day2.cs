@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -10,7 +10,7 @@ namespace AoC.y2018
 
         public Day2()
         {
-            _input = Utils.GetInput(2018, 2).AsListOf<string>();
+            _input = Utils.Utils.GetInput(2018, 2).AsListOf<string>();
 
             Part1();
             Part2();
@@ -29,7 +29,7 @@ namespace AoC.y2018
                 if (duplicates.Contains(3)) threes++;
             }
 
-            Utils.Answer(2, 1, twos * threes);
+            Utils.Utils.Answer(2, 1, twos * threes);
         }
 
         void Part2()
@@ -43,7 +43,7 @@ namespace AoC.y2018
                     var common = s.Where((c, i) => s2[i] == c).ToArray();
                     if (common.Length == lenght - 1)
                     {
-                        Utils.Answer(2, 2, new string(common));
+                        Utils.Utils.Answer(2, 2, new string(common));
                         return;
                     }
                 }

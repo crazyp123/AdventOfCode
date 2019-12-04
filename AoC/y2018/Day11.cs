@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AdventOfCode;
 
 namespace AoC.y2018
 {
@@ -47,7 +46,7 @@ namespace AoC.y2018
                 }
             }
 
-            Utils.Answer(11, 1, answer);
+            Utils.Utils.Answer(11, 1, answer);
         }
 
         object locker = new object();
@@ -80,7 +79,7 @@ namespace AoC.y2018
                 });
             });
 
-            Utils.Answer(11, 2, answer);
+            Utils.Utils.Answer(11, 2, answer);
         }
 
         int Compute(int x, int y)

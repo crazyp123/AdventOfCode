@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 
-namespace AdventOfCode
+namespace AoC.Utils
 {
     public static class Utils
     {
         // your logged in session cookie (taken from browser)
-        public static readonly string _session;
+        private static readonly string _session;
 
         static Utils()
         {
@@ -33,7 +33,10 @@ namespace AdventOfCode
         {
             Console.WriteLine($"Day {day} ({part}/2) Answer is: {result} ");
         }
+    }
 
+    public static class Calculations
+    {
         public static int ManhattanDistance(int x1, int y1, int x2, int y2)
         {
             return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);

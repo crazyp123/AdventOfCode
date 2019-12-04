@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2019
 {
@@ -11,7 +11,7 @@ namespace AoC.y2019
 
         public Day1()
         {
-            _input = Utils.GetInput(2019, 1).AsListOf<int>();
+            _input = Utils.Utils.GetInput(2019, 1).AsListOf<int>();
 
             Part1();
             Part2();
@@ -24,7 +24,7 @@ namespace AoC.y2019
 
             var r = _input.Select(Calc).Sum();
 
-            Utils.Answer(1, 1, r);
+            Utils.Utils.Answer(1, 1, r);
 
         }
 
@@ -32,7 +32,7 @@ namespace AoC.y2019
         {
             var r = _input.Select(z => CalcRec(z, 0)).Sum();
 
-            Utils.Answer(1, 2, r);
+            Utils.Utils.Answer(1, 2, r);
         }
 
         private int Calc(int mass)

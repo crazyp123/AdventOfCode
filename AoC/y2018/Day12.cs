@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -34,7 +34,7 @@ namespace AoC.y2018
         public Day12()
         {
 
-            var strings = Utils.GetInput(2018, 12).AsListOf<string>();
+            var strings = Utils.Utils.GetInput(2018, 12).AsListOf<string>();
 
             var trim = strings[0].Replace("initial state:", "").Trim();
 
@@ -55,7 +55,7 @@ namespace AoC.y2018
         {
             var sum = Run(20);
 
-            Utils.Answer(12, 1, sum);
+            Utils.Utils.Answer(12, 1, sum);
         }
 
         void Part2()
@@ -64,7 +64,7 @@ namespace AoC.y2018
 
             long sum = sum2 + (50000000000 - 96) * 32;
 
-            Utils.Answer(12, 2, sum);
+            Utils.Utils.Answer(12, 2, sum);
         }
 
         private int Run(int generations)

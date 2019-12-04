@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
 
 namespace AoC.y2018
 {
@@ -11,7 +10,7 @@ namespace AoC.y2018
 
         public Day5()
         {
-            Input = Utils.GetInput(2018, 5).Trim();
+            Input = Utils.Utils.GetInput(2018, 5).Trim();
 
             Part1();
             Part2();
@@ -21,7 +20,7 @@ namespace AoC.y2018
         void Part1()
         {
             var reacted = Reduce(Input.ToList());
-            Utils.Answer(5, 1, reacted);
+            Utils.Utils.Answer(5, 1, reacted);
         }
 
         void Part2()
@@ -34,7 +33,7 @@ namespace AoC.y2018
                 results.Add(reacted);
             }
 
-            Utils.Answer(5, 2, results.Min());
+            Utils.Utils.Answer(5, 2, results.Min());
         }
 
         List<char> Clean(string input, char x)

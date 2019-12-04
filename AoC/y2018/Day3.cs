@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -12,7 +12,7 @@ namespace AoC.y2018
 
         public Day3()
         {
-            var input = Utils.GetInput(2018, 3).AsListOf<string>();
+            var input = Utils.Utils.GetInput(2018, 3).AsListOf<string>();
 
             var regex = new Regex(@"([0-9]\d*)");
 
@@ -56,7 +56,7 @@ namespace AoC.y2018
                 }
             }
 
-            Utils.Answer(3, 1, overlaps);
+            Utils.Utils.Answer(3, 1, overlaps);
         }
 
         void Part2()
@@ -98,7 +98,7 @@ namespace AoC.y2018
 
                 if (intact)
                 {
-                    Utils.Answer(3, 2, claim.id);
+                    Utils.Utils.Answer(3, 2, claim.id);
                     return;
                 }
             }

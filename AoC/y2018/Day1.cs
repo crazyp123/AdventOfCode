@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -10,7 +10,7 @@ namespace AoC.y2018
 
         public Day1()
         {
-            var input = Utils.GetInput(2018, 1).AsListOf<int>();
+            var input = Utils.Utils.GetInput(2018, 1).AsListOf<int>();
 
             Part1(input);
             Part2(input);
@@ -18,7 +18,7 @@ namespace AoC.y2018
 
         private void Part1(List<int> input)
         {
-            Utils.Answer(1, 1, input.Sum());
+            Utils.Utils.Answer(1, 1, input.Sum());
         }
 
         private void Part2(List<int> input)
@@ -40,7 +40,7 @@ namespace AoC.y2018
                     _ints.Add(z);
                 }
             }
-            Utils.Answer(1, 2, answer);
+            Utils.Utils.Answer(1, 2, answer);
         }
     }
 }

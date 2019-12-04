@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -10,7 +10,7 @@ namespace AoC.y2018
 
         public Day8()
         {
-            var input = Utils.GetInput(2018, 8).AsListOf<int>(' ');
+            var input = Utils.Utils.GetInput(2018, 8).AsListOf<int>(' ');
 
             Root = ParseNode(input);
 
@@ -20,12 +20,12 @@ namespace AoC.y2018
 
         void Part1()
         {
-            Utils.Answer(8, 1, Root.Sum());
+            Utils.Utils.Answer(8, 1, Root.Sum());
         }
 
         void Part2()
         {
-            Utils.Answer(8, 2, Root.Value());
+            Utils.Utils.Answer(8, 2, Root.Value());
         }
 
 

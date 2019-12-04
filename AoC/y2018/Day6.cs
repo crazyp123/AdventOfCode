@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2018
 {
@@ -13,7 +13,7 @@ namespace AoC.y2018
 
         public Day6()
         {
-            _input = Utils.GetInput(2018, 6).AsListOf<string>().Select(s => new XY(s)).ToList();
+            _input = Utils.Utils.GetInput(2018, 6).AsListOf<string>().Select(s => new XY(s)).ToList();
 
             _width = _input.Max(p => p.X);
             _height = _input.Max(p => p.Y);
@@ -65,7 +65,7 @@ namespace AoC.y2018
                 .GroupBy(loc => loc.Id)
                 .ToDictionary(group => group.Key, group => group.Count());
 
-            Utils.Answer(6, 1, counts.Values.Max());
+            Utils.Utils.Answer(6, 1, counts.Values.Max());
         }
 
         void Part2()
@@ -75,7 +75,7 @@ namespace AoC.y2018
                     .Select(y => _input.Sum(p => ManhattanDistance(x, y, p.X, p.Y)) < 10000 ? 1 : 0))
                 .Sum();
 
-            Utils.Answer(6, 2, size);
+            Utils.Utils.Answer(6, 2, size);
         }
 
         int ManhattanDistance(int x1, int y1, int x2, int y2)

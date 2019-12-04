@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdventOfCode;
+using AoC.Utils;
 
 namespace AoC.y2019
 {
@@ -12,12 +12,12 @@ namespace AoC.y2019
 
         public Day2()
         {
-            _input = Utils.GetInput(2019, 2).AsListOf<int>(',');
+            _input = Utils.Utils.GetInput(2019, 2).AsListOf<int>(',');
         }
 
         public void Part1()
         {
-            Utils.Answer(2, 1, Run(12, 2));
+            Utils.Utils.Answer(2, 1, Run(12, 2));
         }
 
         public void Part2()
@@ -31,7 +31,7 @@ namespace AoC.y2019
                 {
                     if (Run(noun, verb) == 19690720)
                     {
-                        Utils.Answer(2, 2, 100 * noun + verb);
+                        Utils.Utils.Answer(2, 2, 100 * noun + verb);
                         return;
                     }
                 }
