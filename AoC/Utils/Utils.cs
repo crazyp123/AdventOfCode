@@ -25,21 +25,13 @@ namespace AoC.Utils
 
         public static List<T> AsListOf<T>(this string i, char separator = '\n')
         {
-            return i.Split(separator).Where(s => !string.IsNullOrWhiteSpace(s))
+            return i.Split(separator).Where(s => !String.IsNullOrWhiteSpace(s))
                 .Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
         }
 
         public static void Answer(int day, int part, object result)
         {
             Console.WriteLine($"Day {day} ({part}/2) Answer is: {result} ");
-        }
-    }
-
-    public static class Calculations
-    {
-        public static int ManhattanDistance(int x1, int y1, int x2, int y2)
-        {
-            return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
         }
     }
 
