@@ -7,9 +7,9 @@ namespace AoC
     {
         static void Main(string[] args)
         {
-            var x = new Day4();
+            var x = new Day5();
 
-            x.Part1();
+            //   x.Part1();
             x.Part2();
         }
     }
