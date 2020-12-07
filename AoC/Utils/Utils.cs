@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace AoC.Utils
 {
@@ -31,7 +32,22 @@ namespace AoC.Utils
 
         public static void Answer(int day, int part, object result)
         {
-            Console.WriteLine($"Day {day} ({part}/2) Answer is: {result} ");
+            Console.WriteLine($"Day {day} ({part}/2) Answer is: {result}");
+        }
+
+        public static void Answer(int day, int year, int part, object result)
+        {
+            Console.WriteLine($"Day {day} - {year} ({part}/2) Answer is: {result}");
+        }
+
+        public static int GetClassTypeDay(Type t)
+        {
+            return int.TryParse(t.Name.Remove(0, 3), out var d) ? d : 0;
+        }
+
+        public static int GetClassTypeYear(Type t)
+        {
+            return int.TryParse(t.Namespace.Remove(0, 5), out var d) ? d : 0;
         }
     }
 
@@ -43,9 +59,9 @@ namespace AoC.Utils
 
     public abstract class Day : IDay
     {
-        public int DayN => int.Parse(GetType().Name.Remove(0, 3));
+        public int DayN => Utils.GetClassTypeDay(GetType());
 
-        public int Year => int.Parse(GetType().Namespace.Remove(0, 5));
+        public int Year => Utils.GetClassTypeYear(GetType());
 
         public abstract object Result1();
 
@@ -55,12 +71,12 @@ namespace AoC.Utils
 
         public void Part1()
         {
-            Utils.Answer(DayN, 1, Result1());
+            Utils.Answer(DayN, Year, 1, Result1());
         }
 
         public void Part2()
         {
-            Utils.Answer(DayN, 2, Result2());
+            Utils.Answer(DayN, Year, 2, Result2());
         }
 
     }
