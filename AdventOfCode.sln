@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29324.140
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC", "AoC\AoC.csproj", "{FA98D0FF-27EA-4CA4-BEEF-8978FE053B7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoC", "AoC\AoC.csproj", "{FA98D0FF-27EA-4CA4-BEEF-8978FE053B7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.Forms", "AoC.Forms\AoC.Forms.csproj", "{7955EEBA-771A-459B-B71B-4986EEC27F36}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3B5C6E6B-32BA-4B7F-9842-AC33561C0061}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoC.Forms", "AoC.Forms\AoC.Forms.csproj", "{7955EEBA-771A-459B-B71B-4986EEC27F36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{7955EEBA-771A-459B-B71B-4986EEC27F36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7955EEBA-771A-459B-B71B-4986EEC27F36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7955EEBA-771A-459B-B71B-4986EEC27F36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3B5C6E6B-32BA-4B7F-9842-AC33561C0061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3B5C6E6B-32BA-4B7F-9842-AC33561C0061}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3B5C6E6B-32BA-4B7F-9842-AC33561C0061}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3B5C6E6B-32BA-4B7F-9842-AC33561C0061}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

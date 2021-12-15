@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AoC.Utils;
 using AoC.y2019;
 using AoC.y2020;
@@ -8,7 +9,7 @@ namespace AoC
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main()
         {
             Console.ResetColor();
             Console.ForegroundColor = ConsoleColor.Green;

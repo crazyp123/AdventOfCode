@@ -10,7 +10,7 @@ namespace AoC.y2018
 
         public Day8()
         {
-            var input = Utils.Utils.GetInput(2018, 8).AsListOf<int>(' ');
+            var input = Utils.Utils.GetInput(2018, 8).AsListOf<int>(" ");
 
             Root = ParseNode(input);
 

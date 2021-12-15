@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace AoC.Utils
 {
@@ -19,15 +21,27 @@ namespace AoC.Utils
 
         public static string GetInput(int year, int day)
         {
-            var webClient = new WebClient();
-            webClient.Headers.Add(HttpRequestHeader.Cookie, $"session={_session}");
-            return webClient.DownloadString($"http://adventofcode.com/{year}/day/{day}/input").Trim();
+            var webClient = new HttpClient();
+            var url = $"https://adventofcode.com/{year}/day/{day}/input";
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(url),
+            };
+
+            request.Headers.Add("cookie", $"session={_session}");
+            var reponse = webClient.Send(request);
+
+            if(reponse.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception($"input request returned: {reponse.StatusCode} - {reponse.ReasonPhrase}");
+            }
+            return reponse.Content.ReadAsStringAsync().Result.Trim();
         }
 
-        public static List<T> AsListOf<T>(this string i, char separator = '\n')
+        public static List<T> AsListOf<T>(this string i, string separator = "\n")
         {
-            return i.Split(separator).Where(s => !String.IsNullOrWhiteSpace(s))
-                .Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
+            return i.Split(separator).Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
         }
 
         public static void Answer(int day, int part, object result)
