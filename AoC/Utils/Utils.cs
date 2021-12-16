@@ -39,9 +39,9 @@ namespace AoC.Utils
             return reponse.Content.ReadAsStringAsync().Result.Trim();
         }
 
-        public static List<T> AsListOf<T>(this string i, string separator = "\n")
+        public static List<T> AsListOf<T>(this string i, string separator = "\n", StringSplitOptions options = StringSplitOptions.None)
         {
-            return i.Split(separator).Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
+            return i.Split(separator, options).Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
         }
 
         public static void Answer(int day, int part, object result)
