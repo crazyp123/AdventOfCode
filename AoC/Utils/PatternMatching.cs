@@ -84,6 +84,13 @@ namespace AoC.Utils
                 .ToList();
         }
 
+        public static List<(A, B)> AsListOfPatterns<A, B>(this string i, string pattern, char separator = '\n')
+        {
+            return i.Split(separator).Where(s => !String.IsNullOrWhiteSpace(s))
+                .Select(s => ParsePattern<A, B>(s, pattern))
+                .ToList();
+        }
+
         public static (A, B) ParsePattern<A, B>(this string i, string pattern)
         {
             var o= ParseFromPattern(i, pattern);
