@@ -10,6 +10,16 @@ namespace AoC.Utils
             return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
         }
 
+        public static int ManhattanDistance(Point a, Point b)
+        {
+            return Math.Abs(a.X - b.X) + Math.Abs(a.Y - b.Y);
+        }
+
+        public static int Clamp(int value, int min, int max)
+        {
+            return (value < min) ? min : (value > max) ? max : value;
+        }
+
         public static IEnumerable<(T, int)> FindAdjacentItems<T>(this IEnumerable<T> list)
         {
             T previous = default(T);
