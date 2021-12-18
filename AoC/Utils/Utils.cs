@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -32,14 +33,16 @@ namespace AoC.Utils
             request.Headers.Add("cookie", $"session={_session}");
             var reponse = webClient.Send(request);
 
-            if(reponse.StatusCode != HttpStatusCode.OK)
+            if (reponse.StatusCode != HttpStatusCode.OK)
             {
                 throw new Exception($"input request returned: {reponse.StatusCode} - {reponse.ReasonPhrase}");
             }
+
             return reponse.Content.ReadAsStringAsync().Result.Trim();
         }
 
-        public static List<T> AsListOf<T>(this string i, string separator = "\n", StringSplitOptions options = StringSplitOptions.None)
+        public static List<T> AsListOf<T>(this string i, string separator = "\n",
+            StringSplitOptions options = StringSplitOptions.None)
         {
             return i.Split(separator, options).Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
         }
@@ -63,6 +66,40 @@ namespace AoC.Utils
         {
             return int.TryParse(t.Namespace.Remove(0, 5), out var d) ? d : 0;
         }
+
+        public static void CopyToClipboard(string val)
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                $"echo {val} | clip".Bat();
+            }
+        }
+
+        public static string Bat(this string cmd)
+        {
+            var escapedArgs = cmd.Replace("\"", "\\\"");
+            string result = Run("cmd.exe", $"/c \"{escapedArgs}\"");
+            return result;
+        }
+
+        private static string Run(string filename, string arguments)
+        {
+            var process = new Process()
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = filename,
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = false,
+                }
+            };
+            process.Start();
+            string result = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return result;
+        }
     }
 
     public interface IDay
@@ -85,13 +122,28 @@ namespace AoC.Utils
 
         public void Part1()
         {
-            Utils.Answer(DayN, Year, 1, Result1());
+            Utils.Answer(DayN, Year, 1, WrapRunClipboard(Result1));
         }
 
         public void Part2()
         {
-            Utils.Answer(DayN, Year, 2, Result2());
+            Utils.Answer(DayN, Year, 2, WrapRunClipboard(Result2));
         }
 
+        private object WrapRunClipboard(Func<object> func)
+        {
+            object result;
+            try
+            {
+                result = func();
+                Utils.CopyToClipboard(result?.ToString());
+            }
+            catch (Exception e)
+            {
+                result = e.Message;
+            }
+
+            return result;
+        }
     }
 }
