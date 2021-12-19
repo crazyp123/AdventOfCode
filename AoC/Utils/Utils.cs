@@ -49,12 +49,12 @@ namespace AoC.Utils
 
         public static void Answer(int day, int part, object result)
         {
-            Console.WriteLine($"Day {day} ({part}/2) Answer is: {result}");
+            Console.WriteLine($"Day {day} ({part}/2) Answer is:\n{result}");
         }
 
         public static void Answer(int day, int year, int part, object result)
         {
-            Console.WriteLine($"Day {day} - {year} ({part}/2) Answer is: {result}");
+            Console.WriteLine($"Day {day} - {year} ({part}/2) Answer is:\n{result}");
         }
 
         public static int GetClassTypeDay(Type t)

@@ -1,4 +1,5 @@
-﻿using AoC.Utils;
+﻿using AoC.Objects;
+using AoC.Utils;
 
 namespace AoC.y2021
 {
@@ -14,7 +15,7 @@ namespace AoC.y2021
 
         public override object Result1()
         {
-            throw new System.NotImplementedException();
+            return new SevenSegmentNum().GetAsciiNum(3);
         }
 
         public override object Result2()
