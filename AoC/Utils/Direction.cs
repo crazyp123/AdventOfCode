@@ -10,6 +10,14 @@ namespace AoC.Utils
         Right
     }
 
+    public enum DirectionDiagonal
+    {
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight
+    }
+
     public static class DirectionUtils
     {
         public static readonly Direction[] Directions = new[]
@@ -18,6 +26,14 @@ namespace AoC.Utils
             Direction.Down,
             Direction.Left,
             Direction.Right
+        };
+
+        public static readonly DirectionDiagonal[] DirectionDiagonals = new[]
+        {
+            DirectionDiagonal.TopLeft,
+            DirectionDiagonal.TopRight,
+            DirectionDiagonal.BottomLeft,
+            DirectionDiagonal.BottomRight
         };
 
         public static Direction ToDirection(this char c)
@@ -65,6 +81,34 @@ namespace AoC.Utils
                 case Direction.Right:
                     newX = x + dist;
                     break;
+            }
+            return (newX, newY);
+        }
+
+        public static (int x, int y) ApplyDir(int x, int y, DirectionDiagonal dir, int dist = 1)
+        {
+            var newX = x;
+            var newY = y;
+            switch (dir)
+            {
+                case DirectionDiagonal.TopLeft:
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Up, dist);
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Left, dist);
+                    break;
+                case DirectionDiagonal.TopRight:
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Up, dist);
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Right, dist);
+                    break;
+                case DirectionDiagonal.BottomLeft:
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Down, dist);
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Left, dist);
+                    break;
+                case DirectionDiagonal.BottomRight:
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Down, dist);
+                    (newX, newY) = ApplyDir(newX, newY, Direction.Right, dist);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }
             return (newX, newY);
         }

@@ -64,6 +64,8 @@ namespace AoC.Utils
         public int Width => Data.GetLength(0);
         public int Height => Data.GetLength(1);
 
+        public List<GridCell<T>> Cells => GetRows().SelectMany(r => r).ToList();
+
         public Grid(int w, int h)
         {
             Data = new GridCell<T>[w, h];
@@ -100,9 +102,25 @@ namespace AoC.Utils
             return GetCell(pos.x, pos.y);
         }
 
+        public GridCell<T> GetNeighborCell(int x, int y, DirectionDiagonal dir, int step = 1)
+        {
+            var pos = DirectionUtils.ApplyDir(x, y, dir, step);
+            return GetCell(pos.x, pos.y);
+        }
+
         public GridCell<T>[] GetNeighborCells(int x, int y, int step = 1)
         {
             return DirectionUtils.Directions.Select(dir => GetNeighborCell(x, y, dir, step)).Where(cell => cell != null).ToArray();
+        }
+
+        public GridCell<T>[] GetNeighborCellsDiagonal(int x, int y, int step = 1)
+        {
+            return DirectionUtils.DirectionDiagonals.Select(dir => GetNeighborCell(x, y, dir, step)).Where(cell => cell != null).ToArray();
+        }
+
+        public GridCell<T>[] GetNeighborCellsAll(int x, int y, int step = 1)
+        {
+            return GetNeighborCells(x, y, step).Concat(GetNeighborCellsDiagonal(x,y,step)).ToArray();
         }
 
         public void SetRow(int y, T[] row)
@@ -206,6 +224,13 @@ namespace AoC.Utils
             }
         }
 
+        public void Apply(Action<GridCell<T>> action)
+        {
+            for (int x = 0; x < Width; x++)
+            for (int y = 0; y < Height; y++)
+                action(GetCell(x, y));
+        }
+
         public IEnumerable<Z> MapCells<Z>(Func<int, int, GridCell<T>, Z> mapFunc)
         {
             return Enumerable.Range(0, Width)
@@ -228,21 +253,33 @@ namespace AoC.Utils
             return FloodRec(x, y, condition, new List<GridCell<T>>());
         }
 
+        public List<GridCell<T>> Flood(GridCell<T> cell, Func<GridCell<T>, bool> condition)
+        {
+            return FloodRec(cell, condition, new List<GridCell<T>>());
+        }
+
         private List<GridCell<T>> FloodRec(int x, int y, Func<GridCell<T>, bool> condition,
             List<GridCell<T>> visited)
         {
             var cell = GetCell(x, y);
-            if(cell is not null) visited.Add(cell);
+            return FloodRec(cell, condition, visited);
+        }
+
+        private List<GridCell<T>> FloodRec(GridCell<T> cell, Func<GridCell<T>, bool> condition,
+            List<GridCell<T>> visited)
+        {
+            if (cell is not null) visited.Add(cell);
 
             if (cell is null || !condition(cell)) return new List<GridCell<T>>();
 
             var result = new List<GridCell<T>> { cell };
 
-            var neighbors = GetNeighborCells(x, y).Where(c => !visited.Contains(c));
+            var neighbors = GetNeighborCells(cell.X, cell.Y).Where(c => !visited.Contains(c));
             foreach (var neighbor in neighbors)
             {
                 result.AddRange(FloodRec(neighbor.X, neighbor.Y, condition, visited));
             }
+
             return result;
         }
 
