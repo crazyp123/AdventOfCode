@@ -71,7 +71,7 @@ namespace AoC.Utils
         {
             if (OperatingSystem.IsWindows())
             {
-                $"echo {val} | clip".Bat();
+                $"echo | set /p={val}|clip".Bat();
             }
         }
 
@@ -136,7 +136,7 @@ namespace AoC.Utils
             try
             {
                 result = func();
-                Utils.CopyToClipboard(result?.ToString());
+                Utils.CopyToClipboard(result?.ToString().Trim());
             }
             catch (NotImplementedException e)
             {

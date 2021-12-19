@@ -58,6 +58,7 @@ namespace AoC
                     break;
                 default:
                     instance?.Part1();
+                    Console.WriteLine();
                     instance?.Part2();
                     break;
             }
