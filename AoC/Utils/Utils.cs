@@ -138,7 +138,7 @@ namespace AoC.Utils
                 result = func();
                 Utils.CopyToClipboard(result?.ToString());
             }
-            catch (Exception e)
+            catch (NotImplementedException e)
             {
                 result = e.Message;
             }

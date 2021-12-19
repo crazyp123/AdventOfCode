@@ -18,7 +18,6 @@ public static class StringExtensions
 
     public static string Shuffle(this string value, List<string> exclusions)
     {
-        var exclude = exclusions.Select(x=> x.ToList()).ToList();
         var list = value.ToList();
         list.Shuffle();
         var shuffled = new string(list.ToArray());
@@ -77,4 +76,9 @@ static class ExtensionsClass
     }
 
     private static void Swap<T>(ref T a, ref T b) => (a, b) = (b, a);
+
+    public static Grid<T> ToGrid<T>(this List<List<T>> list)
+    {
+        return new Grid<T>(list);
+    }
 }
