@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using AoC.Utils;
 
 namespace AoC.y2021;
@@ -9,47 +10,65 @@ public class Day11 : Day
 
     public Day11()
     {
-        var input = "";
+        var input = "11111\n19991\n19191\n19991\n11111";
 
         input = Input;
 
-        var data = input.AsListOf<string>().Select(s => s.AsListOf<int>()).ToList();
+        var data = input.AsListOf<string>().Select(s => s.AsListOfNumbers()).ToList();
         _grid = data.ToGrid();
+        _grid.Apply(cell => cell.Metadata = false);
     }
 
-    int Flashes(int steps)
+    IEnumerable<int> Flashes(int steps)
     {
-        var flashes = 0;
         for (int i = 0; i < steps; i++)
         {
-            _grid.Apply(cell =>
-            {
-                cell.Value += 1;
-                if (cell.Value > 9)
-                {
-                    flashes++;
-                }
-            });
+            var flashes = 0;
+            _grid.Apply(cell => cell.Value += 1);
+
 
             var ripe = _grid.Cells.Where(cell => cell.Value > 9).ToList();
 
             foreach (var cell in ripe)
             {
-                
+                flashes += Flashed(cell);
             }
+
+            _grid.Cells.Where(cell => cell.Value > 9).Apply(cell =>
+            {
+                cell.Value = 0;
+                cell.Metadata = false;
+            });
+
+            yield return flashes;
 
         }
 
-        return flashes;
+        int Flashed(GridCell<int> c)
+        {
+            if ((bool)c.Metadata || c.Value <= 9) return 0;
+
+            var flashes = 1;
+            c.Metadata = true;
+
+            foreach (var neighborCell in _grid.GetAllNeighborCells(c))
+            {
+                neighborCell.Value += 1;
+                flashes += Flashed(neighborCell);
+            }
+
+            return flashes;
+        }
     }
 
     public override object Result1()
     {
-        
+        return Flashes(100).Sum();
     }
 
     public override object Result2()
     {
-        throw new System.NotImplementedException();
+        var count = _grid.Cells.Count;
+        return Flashes(1000).TakeWhile(i => i != count).Count();
     }
 }

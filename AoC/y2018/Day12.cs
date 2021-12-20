@@ -5,7 +5,7 @@ using AoC.Utils;
 
 namespace AoC.y2018
 {
-    public class Day12
+    public class Day12: Day
     {
         protected internal List<Rule> Rules;
         protected internal string InitialState;
@@ -34,7 +34,7 @@ namespace AoC.y2018
         public Day12()
         {
 
-            var strings = Utils.Utils.GetInput(2018, 12).AsListOf<string>();
+            var strings = Input.AsListOf<string>();
 
             var trim = strings[0].Replace("initial state:", "").Trim();
 
@@ -46,25 +46,19 @@ namespace AoC.y2018
 
             Rules = strings.Select(s => new Rule(s)).ToList();
 
-            //   Part1();
-
-            Part2();
         }
 
-        void Part1()
+        public override object Result1()
         {
-            var sum = Run(20);
-
-            Utils.Utils.Answer(12, 1, sum);
+            return Run(20);
         }
 
-        void Part2()
+        public override object Result2()
         {
             var sum2 = Run(96);
 
             long sum = sum2 + (50000000000 - 96) * 32;
-
-            Utils.Utils.Answer(12, 2, sum);
+            return sum;
         }
 
         private int Run(int generations)

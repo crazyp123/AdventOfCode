@@ -7,6 +7,9 @@ using AoC.y2020;
 
 namespace AoC
 {
+
+    /// QuickGraph cheatsheet: https://gist.github.com/Jbat1Jumper/95c77d216981e13952cf7f22e653d80d
+
     class Program
     {
         static async Task Main()
@@ -29,19 +32,16 @@ namespace AoC
             int? partToRun = null;
 
             Type dayType = null;
-            do
-            {
-                var (day, year, part) = PromptDayToRun();
-                
-                dayType = types.FirstOrDefault(t => Utils.Utils.GetClassTypeDay(t) == day && Utils.Utils.GetClassTypeYear(t) == year);
-                partToRun = part;
+            var (day, year, part) = PromptDayToRun();
 
-                Console.Write($"day {day:D2}/{year}: ");
-                Console.ForegroundColor = dayType is null ? ConsoleColor.Red : ConsoleColor.Green;
-                Console.WriteLine(dayType is null ? "not found, try again" : "OK");
-                Console.ResetColor();
+            dayType = types.FirstOrDefault(t =>
+                Utils.Utils.GetClassTypeDay(t) == day && Utils.Utils.GetClassTypeYear(t) == year);
+            partToRun = part;
 
-            } while (dayType is null);
+            Console.Write($"day {day:D2}/{year}: ");
+            Console.ForegroundColor = dayType is null ? ConsoleColor.Red : ConsoleColor.Green;
+            Console.WriteLine(dayType is null ? "not found, try again" : "OK");
+            Console.ResetColor();
 
             Console.WriteLine();
 
@@ -52,17 +52,42 @@ namespace AoC
             {
                 case 1:
                     instance?.Part1();
+                    PromptPostAnswer(day, year, 1, instance?.Result1);
                     break;
                 case 2:
                     instance?.Part2();
+                    PromptPostAnswer(day, year, 2, instance?.Result2);
                     break;
                 default:
                     instance?.Part1();
                     Console.WriteLine();
                     instance?.Part2();
+                    PromptPostAnswer(day, year, 2, instance?.Result2);
                     break;
             }
+        }
+
+        static void PromptPostAnswer(int day, int year, int part, string value)
+        {
+            if(string.IsNullOrEmpty(value)) return;
+
             Console.ResetColor();
+            Console.WriteLine($"\nPress SPACE to Submit the answer, ENTER to Exit");
+
+            var key = Console.ReadKey();
+            if (key.Key == ConsoleKey.Spacebar)
+            {
+                var resultTxt = AdventOfCodeService.PostAnswer(year, day, part, value);
+                var result = resultTxt.ToLower().Contains("right answer");
+
+                Console.WriteLine("The answer is:");
+                Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.WriteLine(result ? "CORRECT" : "WRONG");
+                Console.WriteLine();
+
+                Console.ResetColor();
+                Console.WriteLine(resultTxt);
+            }
         }
 
         static (int, int, int?) PromptDayToRun()
@@ -105,6 +130,5 @@ namespace AoC
 
             return (day, year, part);
         }
-
     }
 }

@@ -12,41 +12,6 @@ namespace AoC.Utils
 {
     public static class Utils
     {
-        // your logged in session cookie (taken from browser)
-        private static readonly string _session;
-
-        static Utils()
-        {
-            _session = File.ReadAllText("session.txt");
-        }
-
-        public static string GetInput(int year, int day)
-        {
-            var webClient = new HttpClient();
-            var url = $"https://adventofcode.com/{year}/day/{day}/input";
-
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(url),
-            };
-
-            request.Headers.Add("cookie", $"session={_session}");
-            var reponse = webClient.Send(request);
-
-            if (reponse.StatusCode != HttpStatusCode.OK)
-            {
-                throw new Exception($"input request returned: {reponse.StatusCode} - {reponse.ReasonPhrase}");
-            }
-
-            return reponse.Content.ReadAsStringAsync().Result.Trim();
-        }
-
-        public static List<T> AsListOf<T>(this string i, string separator = "\n",
-            StringSplitOptions options = StringSplitOptions.None)
-        {
-            return i.Split(separator, options).Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
-        }
-
         public static void Answer(int day, int part, object result)
         {
             Console.WriteLine($"Day {day} ({part}/2) Answer is:\n{result}");
@@ -104,12 +69,18 @@ namespace AoC.Utils
 
     public interface IDay
     {
+        string Result1 { get; }
+        string Result2 { get; }
+
         void Part1();
         void Part2();
     }
 
     public abstract class Day : IDay
     {
+        private string _result1;
+        private string _result2;
+
         public int DayN => Utils.GetClassTypeDay(GetType());
 
         public int Year => Utils.GetClassTypeYear(GetType());
@@ -118,16 +89,22 @@ namespace AoC.Utils
 
         public abstract object Result2();
 
-        public string Input => Utils.GetInput(Year, DayN);
+        public string Input => AdventOfCodeService.GetInput(Year, DayN);
+
+        string IDay.Result1 => _result1;
+
+        string IDay.Result2 => _result2;
 
         public void Part1()
         {
-            Utils.Answer(DayN, Year, 1, WrapRunClipboard(Result1));
+            _result1 = WrapRunClipboard(Result1)?.ToString();
+            Utils.Answer(DayN, Year, 1, _result1);
         }
 
         public void Part2()
         {
-            Utils.Answer(DayN, Year, 2, WrapRunClipboard(Result2));
+            _result2 = WrapRunClipboard(Result2)?.ToString();
+            Utils.Answer(DayN, Year, 2, _result2);
         }
 
         private object WrapRunClipboard(Func<object> func)
@@ -136,7 +113,7 @@ namespace AoC.Utils
             try
             {
                 result = func();
-                Utils.CopyToClipboard(result?.ToString().Trim());
+                Utils.CopyToClipboard(result.ToString().Trim());
             }
             catch (NotImplementedException e)
             {

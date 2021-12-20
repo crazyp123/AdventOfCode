@@ -10,7 +10,7 @@ namespace AoC.y2018
 
         public Day2()
         {
-            _input = Utils.Utils.GetInput(2018, 2).AsListOf<string>();
+            _input = AdventOfCodeService.GetInput(2018, 2).AsListOf<string>();
 
             Part1();
             Part2();

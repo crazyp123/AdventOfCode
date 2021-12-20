@@ -11,7 +11,7 @@ namespace AoC.y2019
 
         public Day1()
         {
-            _input = Utils.Utils.GetInput(2019, 1).AsListOf<int>();
+            _input = AdventOfCodeService.GetInput(2019, 1).AsListOf<int>();
 
             Part1();
             Part2();

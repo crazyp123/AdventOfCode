@@ -13,7 +13,7 @@ namespace AoC.y2018
 
         public Day4()
         {
-            var input = Utils.Utils.GetInput(2018, 4).AsListOf<string>();
+            var input = AdventOfCodeService.GetInput(2018, 4).AsListOf<string>();
 
             _logs = input.Select(ParseLog).OrderBy(log => log.Time).ToList();
 

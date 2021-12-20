@@ -12,7 +12,7 @@ namespace AoC.y2018
 
         public Day3()
         {
-            var input = Utils.Utils.GetInput(2018, 3).AsListOf<string>();
+            var input = AdventOfCodeService.GetInput(2018, 3).AsListOf<string>();
 
             var regex = new Regex(@"([0-9]\d*)");
 

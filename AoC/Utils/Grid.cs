@@ -113,14 +113,29 @@ namespace AoC.Utils
             return DirectionUtils.Directions.Select(dir => GetNeighborCell(x, y, dir, step)).Where(cell => cell != null).ToArray();
         }
 
-        public GridCell<T>[] GetNeighborCellsDiagonal(int x, int y, int step = 1)
+        public GridCell<T>[] GetNeighborCells(GridCell<T> cell, int step = 1)
         {
-            return DirectionUtils.DirectionDiagonals.Select(dir => GetNeighborCell(x, y, dir, step)).Where(cell => cell != null).ToArray();
+            return DirectionUtils.Directions.Select(dir => GetNeighborCell(cell.X, cell.Y, dir, step)).Where(cell => cell != null).ToArray();
         }
 
-        public GridCell<T>[] GetNeighborCellsAll(int x, int y, int step = 1)
+        public GridCell<T>[] GetDiagonalNeighborCells(GridCell<T> cell, int dist = 1)
         {
-            return GetNeighborCells(x, y, step).Concat(GetNeighborCellsDiagonal(x,y,step)).ToArray();
+            return DirectionUtils.DirectionDiagonals.Select(dir => GetNeighborCell(cell.X, cell.Y, dir, dist)).Where(c => c != null).ToArray();
+        }
+
+        public GridCell<T>[] GetDiagonalNeighborCells(int x, int y, int dist = 1)
+        {
+            return DirectionUtils.DirectionDiagonals.Select(dir => GetNeighborCell(x, y, dir, dist)).Where(c => c != null).ToArray();
+        }
+
+        public GridCell<T>[] GetAllNeighborCells(int x, int y, int step = 1)
+        {
+            return GetNeighborCells(x, y, step).Concat(GetDiagonalNeighborCells(x,y,step)).ToArray();
+        }
+
+        public GridCell<T>[] GetAllNeighborCells(GridCell<T> cell, int step = 1)
+        {
+            return GetNeighborCells(cell, step).Concat(GetDiagonalNeighborCells(cell, step)).ToArray();
         }
 
         public void SetRow(int y, T[] row)

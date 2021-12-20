@@ -12,7 +12,7 @@ namespace AoC.y2018
 
         public Day7()
         {
-            Instructions = Utils.Utils.GetInput(2018, 7).AsListOf<string>()
+            Instructions = AdventOfCodeService.GetInput(2018, 7).AsListOf<string>()
                 .Select(s => s.Split(' ').Where(s1 => s1.Length == 1 && char.IsUpper(s1[0])).ToArray())
                 .Select(strings => new Instr(strings[0][0], strings[1][0]))
                 .ToList();

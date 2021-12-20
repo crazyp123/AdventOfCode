@@ -4,24 +4,22 @@ using AoC.Utils;
 
 namespace AoC.y2018
 {
-    public class Day1
+    public class Day1 : Day
     {
         private readonly List<int> _ints = new List<int> { 0 };
+        private List<int> input;
 
         public Day1()
         {
-            var input = Utils.Utils.GetInput(2018, 1).AsListOf<int>();
-
-            Part1(input);
-            Part2(input);
+            input = Input.AsListOf<int>();
         }
 
-        private void Part1(List<int> input)
+        public override object Result1()
         {
-            Utils.Utils.Answer(1, 1, input.Sum());
+            return input.Sum();
         }
 
-        private void Part2(List<int> input)
+        public override object Result2()
         {
             var answer = 0;
             var found = false;
@@ -40,7 +38,7 @@ namespace AoC.y2018
                     _ints.Add(z);
                 }
             }
-            Utils.Utils.Answer(1, 2, answer);
+            return answer;
         }
     }
 }

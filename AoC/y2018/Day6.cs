@@ -13,7 +13,7 @@ namespace AoC.y2018
 
         public Day6()
         {
-            _input = Utils.Utils.GetInput(2018, 6).AsListOf<string>().Select(s => new XY(s)).ToList();
+            _input = AdventOfCodeService.GetInput(2018, 6).AsListOf<string>().Select(s => new XY(s)).ToList();
 
             _width = _input.Max(p => p.X);
             _height = _input.Max(p => p.Y);

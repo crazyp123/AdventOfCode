@@ -10,7 +10,7 @@ namespace AoC.y2018
 
         public Day5()
         {
-            Input = Utils.Utils.GetInput(2018, 5).Trim();
+            Input = AdventOfCodeService.GetInput(2018, 5).Trim();
 
             Part1();
             Part2();
