@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace AoC.Utils
 {
@@ -26,6 +27,15 @@ namespace AoC.Utils
             Grid = grid;
             X = x;
             Y = y;
+        }
+
+        public GridCell(Grid<T> grid, int x, int y, T value, object metadata)
+        {
+            Grid = grid;
+            X = x;
+            Y = y;
+            Value = value;
+            Metadata = metadata;
         }
 
         public GridCell<T>[] GetNeighbors(int dist = 1)
@@ -69,7 +79,7 @@ namespace AoC.Utils
         public Grid(int w, int h)
         {
             Data = new GridCell<T>[w, h];
-            Data.Initialize();
+            Apply((x, y, cell) => AddCell(x,y,default));
         }
 
         public Grid(List<List<T>> data)
@@ -217,15 +227,35 @@ namespace AoC.Utils
             return cols;
         }
 
+        public GridCell<T> AddCell(int x, int y, T value, object metadata = null)
+        {
+            var cell = new GridCell<T>(this, x, y, value, metadata);
+            Data[x, y] = cell;
+            return cell;
+        }
+
+        public void SetCell(int x, int y, GridCell<T> cell)
+        {
+            Data[x,y] = cell;
+        }
+
         public void Set(int x, int y, T item)
         {
-            Data[x, y].Value = item;
+            GetCell(x, y).Value = item;
         }
 
         public void Set(int x, int y, T item, object metadata)
         {
-            Data[x, y].Value = item;
-            Data[x, y].Metadata = metadata;
+            var cell = GetCell(x, y);
+            if (cell is null)
+            {
+                AddCell(x, y, item, metadata);
+            }
+            else
+            {
+                cell.Value = item;
+                cell.Metadata = metadata;
+            }
         }
 
         public void Apply(Action<int, int, GridCell<T>> action)
@@ -321,6 +351,66 @@ namespace AoC.Utils
                 }
                 Data[newX, newY].Value = action(newX, newY, Data[newX, newY].Value);
             }
+        }
+
+        /// <summary>
+        /// Folds the current grid along an axis like a piece of paper. Returns a new grid.
+        /// </summary>
+        /// <param name="vertically">x or y axis</param>
+        /// <param name="foldSide">the side to fold e.g 0 is left to right or top to bottom</param>
+        /// <param name="foldOnItem">Set whether to pivot on index or item. If true, the pivoting position row/col will be dropped.</param>
+        /// <param name="mergeCells">merge function</param>
+        /// <returns></returns>
+        public Grid<T> FoldInward(bool vertically, int position, int foldSide, bool foldOnItem, Action<GridCell<T>, GridCell<T>, GridCell<T>> mergeCells)
+        {
+            var _w = vertically && foldOnItem ? Width - 1 : Width;
+            var _h = !vertically && foldOnItem ? Height - 1 : Height;
+
+            var width = vertically ? Math.Max(position, _w - position) : _w;
+            var height = vertically ? _h : Math.Max(position, _h - position);
+
+            var grid = new Grid<T>(width, height);
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var x0 = vertically ? (foldSide == 0 ? width - 1 - x : x) : x;
+                    var y0 = !vertically ? (foldSide == 0 ? height - 1 - y : y) : y;
+
+                    var x1 = vertically ? (foldSide == 0 ? width + x : width + width -1 - x) : x;
+                    var y1 = !vertically ? (foldSide == 0 ? height + y : height + height - 1 - y) : y;
+
+                    if (foldOnItem)
+                    {
+                        x1 += vertically ? 1 : 0;
+                        y1 += !vertically ? 1 : 0;
+                    }
+
+                    var cell0 = GetCell(x0, y0);
+                    var cell1 = GetCell(x1, y1);
+                    var newCell = grid.AddCell(x, y, default);
+
+                    mergeCells(cell0, cell1, newCell);
+                }
+            }
+            return grid;
+        }
+
+        public string Print(Func<GridCell<T>, string> mapCell, bool flipX = false, bool flipY = false)
+        {
+            var sb = new StringBuilder();
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    var _x = flipX ? Width - x - 1 : x;
+                    var _y = flipY ? Height - y - 1 : y;
+                    var cell = GetCell(_x, _y);
+                    sb.Append(mapCell(cell));
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
 
     }
