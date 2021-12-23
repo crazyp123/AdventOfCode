@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using HtmlAgilityPack;
+using QuikGraph;
 
 namespace AoC.Utils
 {
@@ -186,6 +188,17 @@ namespace AoC.Utils
             }
         }
 
+        public void SetCol(int x, T[] col, object metadata)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                Data[x, y] = new GridCell<T>(col[y], this, x, y)
+                {
+                    Metadata = metadata
+                };
+            }
+        }
+
         public GridCell<T>[] GetRow(int y)
         {
             var row = new GridCell<T>[Width];
@@ -225,6 +238,14 @@ namespace AoC.Utils
                 cols[i] = GetCol(i);
             }
             return cols;
+        }
+
+        public void SetCols(List<List<T>> cols)
+        {
+            for (int x = 0; x < cols.Count; x++)
+            {
+                SetCol(x, cols[x].ToArray(), null);
+            }
         }
 
         public GridCell<T> AddCell(int x, int y, T value, object metadata = null)
@@ -411,6 +432,22 @@ namespace AoC.Utils
                 sb.AppendLine();
             }
             return sb.ToString();
+        }
+
+        public AdjacencyGraph<GridCell<T>, SEquatableEdge<GridCell<T>>> BuildAdjacencyGraph()
+        {
+            var graph = new AdjacencyGraph<GridCell<T>, SEquatableEdge<GridCell<T>>>();
+
+            foreach (var cell in Cells)
+            {
+                foreach (var neighbor in cell.GetNeighbors())
+                {
+                    if(neighbor is null) continue;
+                    graph.AddVerticesAndEdge(new SEquatableEdge<GridCell<T>>(cell, neighbor));
+                }
+            }
+
+            return graph;
         }
 
     }
