@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -63,7 +64,11 @@ public static class AdventOfCodeService
             Level = part,
             Answer = value
         };
-        request.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+        request.Content = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("level", part.ToString()),
+            new KeyValuePair<string, string>("answer", value)
+        });
 
         var response = webClient.Send(request);
 
