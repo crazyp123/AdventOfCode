@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="y2022\" />
     <Folder Include="Objects\" />
   </ItemGroup>
 

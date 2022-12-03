@@ -62,4 +62,81 @@ public static class CollectionExtensions
             (list[k], list[n]) = (list[n], list[k]);
         }
     }
+
+    /// <summary>
+    /// Splits a list in groups of equal parts of size <see cref="groupSize"/>
+    /// </summary>
+    /// <returns></returns>
+    public static List<List<T>> SplitInEqualGroups<T>(this List<T> list, int groupSize)
+    {
+        var groups = new List<List<T>>();
+        var next = new List<T>();
+        foreach (var r in list)
+        {
+            next.Add(r);
+            if (next.Count == groupSize)
+            {
+                groups.Add(next);
+                next = new List<T>();
+            }
+        }
+        return groups;
+    }
+
+    /// <summary>
+    /// Splits a list into multiple using a separator item (excluded).
+    /// </summary>
+    public static List<List<T>> SplitBy<T>(this List<T> list, Func<T, int, bool> separator)
+    {
+        var groups = new List<List<T>>();
+        var next = new List<T>();
+        for (var i = 0; i < list.Count; i++)
+        {
+            var r = list[i];
+            if (!separator(r, i))
+            {
+                next.Add(r);
+                continue;
+            };
+
+            groups.Add(next);
+            next = new List<T>();
+        }
+
+        return groups;
+    }
+
+    /// <summary>
+    /// Splits a list into multiple using a separator item and including separating item.
+    /// </summary>
+    /// <param name="splitAfterSeparator">set to true if the separator indicates the beginning of the new group</param>
+    public static List<List<T>> SplitByAndIncluding<T>(this List<T> list, Func<T, int, bool> separator, bool splitAfterSeparator)
+    {
+        var groups = new List<List<T>>();
+        var next = new List<T>();
+        for (var i = 0; i < list.Count; i++)
+        {
+            var r = list[i];
+            if (!separator(r, i))
+            {
+                next.Add(r);
+                continue;
+            };
+
+            if (splitAfterSeparator)
+            {
+                next.Add(r);
+            }
+
+            groups.Add(next);
+            next = new List<T>();
+
+            if (!splitAfterSeparator)
+            {
+                next.Add(r);
+            }
+        }
+
+        return groups;
+    }
 }

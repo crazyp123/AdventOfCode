@@ -60,6 +60,7 @@ namespace AoC
                     break;
                 default:
                     instance?.Part1();
+                    PromptPostAnswer(day, year, 1, instance?.Result1);
                     Console.WriteLine();
                     instance?.Part2();
                     PromptPostAnswer(day, year, 2, instance?.Result2);
@@ -67,26 +68,26 @@ namespace AoC
             }
         }
 
-        static void PromptPostAnswer(int day, int year, int part, string value)
+        static void PromptPostAnswer(int day, int year, int part, string value, bool submit = false)
         {
-            if(string.IsNullOrEmpty(value)) return;
+            if(string.IsNullOrEmpty(value) || value == "The method or operation is not implemented.") return;
 
             Console.ResetColor();
-            Console.WriteLine($"\nPress SPACE to Submit the answer, ENTER to Exit");
+            Console.WriteLine($"\nPress SPACE to Submit the answer, ENTER to Continue");
 
-            var key = Console.ReadKey();
-            if (key.Key == ConsoleKey.Spacebar)
+            if (submit || Console.ReadKey().Key == ConsoleKey.Spacebar)
             {
                 var resultTxt = AdventOfCodeService.PostAnswer(year, day, part, value);
-                var result = resultTxt.ToLower().Contains("right answer");
-
-                Console.WriteLine("The answer is:");
-                Console.ForegroundColor = result ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.WriteLine(result ? "CORRECT" : "WRONG");
+                var isCorrect = resultTxt.Contains("That's the right answer!");
+            
+                Console.WriteLine("\nThe answer is:");
+                Console.ForegroundColor = isCorrect ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.WriteLine(isCorrect ? "*** CORRECT :) ***" : "*** WRONG :( ***");
                 Console.WriteLine();
 
-                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(resultTxt);
+                Console.ResetColor();
             }
         }
 

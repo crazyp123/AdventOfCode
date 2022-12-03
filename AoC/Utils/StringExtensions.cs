@@ -26,11 +26,32 @@ public static class StringExtensions
     public static List<T> AsListOf<T>(this string i, string separator = "\n",
         StringSplitOptions options = StringSplitOptions.None)
     {
-        return i.Split(separator, options).Select(s => (T)Convert.ChangeType(s, typeof(T))).ToList();
+        return i.Split(separator, options).Select(ConvertTo<T>).ToList();
+    }
+
+    public static T ConvertTo<T>(string s)
+    {
+        try
+        {
+            return (T)Convert.ChangeType(s, typeof(T));
+        }
+        catch
+        {
+            return default;
+        }
     }
 
     public static List<int> AsListOfNumbers(this string i)
     {
         return i.Select(c => (int)char.GetNumericValue(c)).ToList();
+    }
+
+    public static List<List<T>> AsListOfGroups<T>(this string i, string separator = "")
+    {
+        var x = i.AsListOf<string>()
+            .SplitBy((s, i1) => s.Equals(separator));
+        
+            return x.Select(group => group.Select(ConvertTo<T>).ToList())
+            .ToList();
     }
 }
