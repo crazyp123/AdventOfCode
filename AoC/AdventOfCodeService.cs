@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -80,6 +81,49 @@ public static class AdventOfCodeService
         }
         catch (Exception e)
         {
+            return null;
+        }
+    }
+
+    public static List<string> GetProblem(int year, int day, int part)
+    {
+        try
+        {
+            using var webClient = new HttpClient();
+            var url = $"{BASE_URL}/{year}/day/{day}";
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(url),
+            };
+            request.Headers.Add("cookie", $"session={_sessionCookie}");
+            var response = webClient.Send(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception($"input request returned: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+
+            var content = response.Content.ReadAsStringAsync().Result;
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(content);
+
+            var articles = htmlDoc.DocumentNode.SelectNodes("//article");
+
+            if (part == 1)
+            {
+                return articles.First().ChildNodes.Select(node => node.InnerText).ToList();
+            }
+
+            return articles.Count > 1
+                ? articles[1].ChildNodes.Select(node => node.InnerText).ToList()
+                : new List<string>{ "part 2 not found!!" };
+
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to retrieve input! error: {e.Message}");
             return null;
         }
     }

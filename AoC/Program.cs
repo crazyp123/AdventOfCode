@@ -2,8 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AoC.Utils;
-using AoC.y2019;
-using AoC.y2020;
+using Spectre.Console;
 
 namespace AoC
 {
@@ -14,41 +13,23 @@ namespace AoC
     {
         static async Task Main()
         {
-            Console.ResetColor();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("----------------------");
-            Console.WriteLine("--- ADVENT OF CODE ---");
-            Console.WriteLine("----------------------");
-            Console.ResetColor();
+            AnsiConsole.Write(
+                new Panel(new FigletText("ADVENT OF CODE")
+                    .Color(Color.Green1)
+                    .Centered())
+                    .BorderColor(Color.Green1)
+            );
 
-            Console.WriteLine($"today is: {DateTime.Today.Day:D2}/{DateTime.Today.Year}");
+            AnsiConsole.Write(new Markup($"year: [invert]{DateTime.Today.Year}[/]").Centered());
+            AnsiConsole.Write(new Markup($"day: [green]{DateTime.Today.Day:D2}[/]\n").Centered());
 
-            var type = typeof(Day);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p))
-                .ToList();
-
-            int? partToRun = null;
-
-            Type dayType = null;
             var (day, year, part) = PromptDayToRun();
 
-            dayType = types.FirstOrDefault(t =>
-                Utils.Utils.GetClassTypeDay(t) == day && Utils.Utils.GetClassTypeYear(t) == year);
-            partToRun = part;
-
-            Console.Write($"day {day:D2}/{year}: ");
-            Console.ForegroundColor = dayType is null ? ConsoleColor.Red : ConsoleColor.Green;
-            Console.WriteLine(dayType is null ? "not found, try again" : "OK");
-            Console.ResetColor();
-
+            var instance = GetDayImplementation(day, year);
             Console.WriteLine();
 
-            var instance = (IDay)Activator.CreateInstance(dayType);
-
             Console.ForegroundColor = ConsoleColor.Blue;
-            switch (partToRun)
+            switch (part)
             {
                 case 1:
                     instance?.Part1();
@@ -60,17 +41,40 @@ namespace AoC
                     break;
                 default:
                     instance?.Part1();
-                    PromptPostAnswer(day, year, 1, instance?.Result1);
+                    var correct = PromptPostAnswer(day, year, 1, instance?.Result1);
+                    if (correct)
+                    {
+                        ShowProblem(year, day, 2);
+                    }
                     Console.WriteLine();
+
                     instance?.Part2();
                     PromptPostAnswer(day, year, 2, instance?.Result2);
                     break;
             }
         }
 
-        static void PromptPostAnswer(int day, int year, int part, string value, bool submit = false)
+        private static IDay GetDayImplementation(int day, int year)
         {
-            if(string.IsNullOrEmpty(value) || value == "The method or operation is not implemented.") return;
+            var dayType = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof(Day).IsAssignableFrom(p))
+                .FirstOrDefault(t =>
+                    Utils.Utils.GetClassTypeDay(t) == day && Utils.Utils.GetClassTypeYear(t) == year);
+
+            if (dayType == null)
+            {
+                AnsiConsole.MarkupLine($"[red]y{year}.Day{day} not found![/]");
+                return null;
+            }
+
+            var instance = (IDay)Activator.CreateInstance(dayType);
+            return instance;
+        }
+
+        static bool PromptPostAnswer(int day, int year, int part, string value, bool submit = false)
+        {
+            if(string.IsNullOrEmpty(value) || value == "The method or operation is not implemented.") return false;
 
             Console.ResetColor();
             Console.WriteLine($"\nPress SPACE to Submit the answer, ENTER to Continue");
@@ -88,7 +92,10 @@ namespace AoC
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(resultTxt);
                 Console.ResetColor();
+                return isCorrect;
             }
+
+            return false;
         }
 
         static (int, int, int?) PromptDayToRun()
@@ -96,30 +103,15 @@ namespace AoC
             var day = DateTime.Today.Day;
             var year = DateTime.Today.Year;
 
-            Console.WriteLine($"enter day and year (default {year}) to run, or press ENTER to run current day:");
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            var dayToRun = Console.ReadLine();
-            Console.ResetColor();
-
-            int? part = null;
-
-            if (!string.IsNullOrWhiteSpace(dayToRun))
+            var runToday = AnsiConsole.Confirm("Run current day?");
+            if (runToday)
             {
-                var split = dayToRun.Split(' ');
-
-                if (split[0].StartsWith("p"))
-                {
-                    part = int.TryParse(split[0].Substring(1), out var p) ? p : part;
-                    day = int.TryParse(split[1], out var d) ? d : -1;
-                    if (split.Length == 3) year = int.TryParse(split[2], out var y) ? y : -1;
-                }
-                else
-                {
-                    day = int.TryParse(split[0], out var d) ? d : -1;
-                    if (split.Length == 2) year = int.TryParse(split[1], out var y) ? y : -1;
-                }
+                return (day, year, null);
             }
+
+            year = AnsiConsole.Ask<int>("Year", year);
+            day = AnsiConsole.Ask("Day", day);
+            var part = AnsiConsole.Ask("Part", 1);
 
             if (day == -1 || year == -1)
             {
@@ -130,6 +122,25 @@ namespace AoC
             }
 
             return (day, year, part);
+        }
+
+        private static void ShowProblem(int year, int day, int part)
+        {
+            AnsiConsole.Status()
+                .Spinner(Spinner.Known.SimpleDotsScrolling)
+                .Start($"loading day {day} part {part}", ctx =>
+                {
+                    var problem = AdventOfCodeService.GetProblem(year, day, part);
+                    var content = new Text(string.Join("\n", problem.Skip(1)));
+                    var panel = new Panel(content)
+                        .BorderColor(Color.SteelBlue)
+                        .Header($"Day {day} Part {part}")
+                        .HeaderAlignment(Justify.Center)
+                        .PadTop(2)
+                        .PadLeft(2)
+                        .PadRight(2);
+                    AnsiConsole.Write(panel);
+                });
         }
     }
 }

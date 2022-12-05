@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace AoC.Utils
 {
@@ -14,12 +8,14 @@ namespace AoC.Utils
     {
         public static void Answer(int day, int part, object result)
         {
-            Console.WriteLine($"Day {day} ({part}/2) Answer is:\n{result}");
+            Console.WriteLine($"Day {day} ({part}/2) Answer is:");
+            AnsiConsole.MarkupLine($"[invert]{result}[/]");
         }
 
         public static void Answer(int day, int year, int part, object result)
         {
-            Console.WriteLine($"Day {day} - {year} ({part}/2) Answer is:\n{result}");
+            AnsiConsole.MarkupLine($"Day {day} - {year} ({part}/2) Answer is:");
+            AnsiConsole.MarkupLine($"[bold yellow]{result}[/]");
         }
 
         public static int GetClassTypeDay(Type t)
