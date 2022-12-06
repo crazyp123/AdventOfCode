@@ -26,9 +26,7 @@ namespace AoC
             var (day, year, part) = PromptDayToRun();
 
             var instance = GetDayImplementation(day, year);
-            Console.WriteLine();
 
-            Console.ForegroundColor = ConsoleColor.Blue;
             switch (part)
             {
                 case 1:
@@ -74,24 +72,25 @@ namespace AoC
 
         static bool PromptPostAnswer(int day, int year, int part, string value, bool submit = false)
         {
-            if(string.IsNullOrEmpty(value) || value == "The method or operation is not implemented.") return false;
+            if (string.IsNullOrEmpty(value) || value == "The method or operation is not implemented.") return false;
 
-            Console.ResetColor();
-            Console.WriteLine($"\nPress SPACE to Submit the answer, ENTER to Continue");
+            AnsiConsole.MarkupLine($"\nPress [yellow]SPACE[/] to Submit the answer, [yellow]ENTER[/] to Continue");
 
             if (submit || Console.ReadKey().Key == ConsoleKey.Spacebar)
             {
                 var resultTxt = AdventOfCodeService.PostAnswer(year, day, part, value);
+                if (resultTxt.Contains("Did you already complete it?"))
+                {
+                    AnsiConsole.MarkupLine("[green]Already complete![/]");
+                    return true;
+                }
                 var isCorrect = resultTxt.Contains("That's the right answer!");
-            
-                Console.WriteLine("\nThe answer is:");
-                Console.ForegroundColor = isCorrect ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.WriteLine(isCorrect ? "*** CORRECT :) ***" : "*** WRONG :( ***");
+
+                AnsiConsole.MarkupLine("\nThe answer is:");
+                AnsiConsole.MarkupLine(isCorrect ? "[green]*** CORRECT :) ***[/]" : "[red]*** WRONG :( ***[/]");
                 Console.WriteLine();
 
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(resultTxt);
-                Console.ResetColor();
+                AnsiConsole.MarkupLine($"[yellow]{resultTxt}[/]");
                 return isCorrect;
             }
 
@@ -115,9 +114,7 @@ namespace AoC
 
             if (day == -1 || year == -1)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("wrong input");
-                Console.ResetColor();
+                AnsiConsole.MarkupLine("[red]wrong input[/]");
                 return PromptDayToRun();
             }
 
