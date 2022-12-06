@@ -30,6 +30,8 @@ namespace AoC.Utils
 
         public static void CopyToClipboard(string val)
         {
+            if (val == null) return;
+
             if (OperatingSystem.IsWindows())
             {
                 $"echo | set /p={val}|clip".Bat();
@@ -76,6 +78,7 @@ namespace AoC.Utils
     {
         private string _result1;
         private string _result2;
+        private string _input;
 
         public int DayN => Utils.GetClassTypeDay(GetType());
 
@@ -85,7 +88,19 @@ namespace AoC.Utils
 
         public abstract object Result2();
 
-        public string Input => AdventOfCodeService.GetInput(Year, DayN);
+        public string Input
+        {
+            get
+            {
+                if (_input != null)
+                {
+                    return _input;
+                }
+
+                _input = AdventOfCodeService.GetInput(Year, DayN);
+                return _input;
+            }
+        }
 
         string IDay.Result1 => _result1;
 
