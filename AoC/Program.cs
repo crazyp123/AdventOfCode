@@ -74,7 +74,7 @@ namespace AoC
         {
             if (string.IsNullOrEmpty(value) || value == "The method or operation is not implemented.") return false;
 
-            AnsiConsole.MarkupLine($"\nPress [yellow]SPACE[/] to Submit the answer, [yellow]ENTER[/] to Continue");
+            AnsiConsole.MarkupLine($"Press [yellow]SPACE[/] to Submit or [yellow]ENTER[/] to Continue");
 
             if (submit || Console.ReadKey().Key == ConsoleKey.Spacebar)
             {
@@ -90,7 +90,7 @@ namespace AoC
                 AnsiConsole.MarkupLine(isCorrect ? "[green]*** CORRECT :) ***[/]" : "[red]*** WRONG :( ***[/]");
                 Console.WriteLine();
 
-                AnsiConsole.MarkupLine($"[yellow]{resultTxt}[/]");
+                AnsiConsole.Write(new Text(resultTxt, new Style(Color.Yellow3_1)));
                 return isCorrect;
             }
 
