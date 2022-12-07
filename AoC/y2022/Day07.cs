@@ -39,7 +39,9 @@ namespace AoC.y2022
 
         public override object Result1()
         {
-            return _root.Flat().Where(d => d.TotalSize() < 100000).Sum(d => d.TotalSize());
+            return _root.Flat()
+                .Where(d => d.TotalSize() < 100000)
+                .Sum(d => d.TotalSize());
         }
 
         public override object Result2()

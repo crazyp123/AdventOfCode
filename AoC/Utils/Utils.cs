@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace AoC.Utils
 {
     public static class Utils
     {
+
+        public static void Run(this Day day, int part)
+        {
+            if (part == 1) day.Part1();
+            else if (part == 2) day.Part2();
+        }
+
+        public static string Result(this Day day, int part)
+        {
+            return part == 1 ? day.ResultPart1 : day.ResultPart2;
+        }
+
         public static void Answer(int day, int part, object result)
         {
             Answer(day, DateTime.Today.Year, part, result);
@@ -73,8 +86,9 @@ namespace AoC.Utils
 
     public interface IDay
     {
-        string Result1 { get; }
-        string Result2 { get; }
+        string ResultPart1 { get; }
+        string ResultPart2 { get; }
+
 
         void Part1();
         void Part2();
@@ -108,9 +122,9 @@ namespace AoC.Utils
             }
         }
 
-        string IDay.Result1 => _result1;
+        public string ResultPart1 => _result1;
 
-        string IDay.Result2 => _result2;
+        public string ResultPart2 => _result2;
 
         public void Part1()
         {

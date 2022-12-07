@@ -5,8 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
+using Spectre.Console;
+using Spectre.Console.Rendering;
 
 namespace AoC;
 
@@ -23,6 +26,11 @@ public static class AdventOfCodeService
     }
 
     public static string GetInput(int year, int day)
+    {
+        return GetInputAsync(year, day).Result;
+    }
+
+    public static async Task<string> GetInputAsync(int year, int day)
     {
         try
         {
@@ -41,7 +49,8 @@ public static class AdventOfCodeService
                 throw new Exception($"input request returned: {response.StatusCode} - {response.ReasonPhrase}");
             }
 
-            return response.Content.ReadAsStringAsync().Result.Trim();
+            var res = await response.Content.ReadAsStringAsync();
+            return res.Trim();
         }
         catch (Exception e)
         {
@@ -51,6 +60,11 @@ public static class AdventOfCodeService
     }
 
     public static string PostAnswer(int year, int day, int part, string value)
+    {
+        return PostAnswerAsync(year, day, part, value).Result;
+    }
+
+    public static async Task<string> PostAnswerAsync(int year, int day, int part, string value)
     {
         try
         {
@@ -72,7 +86,7 @@ public static class AdventOfCodeService
 
             var response = webClient.Send(request);
 
-            var html = response.Content.ReadAsStringAsync().Result;
+            var html = await response.Content.ReadAsStringAsync();
             var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(html);
 
@@ -84,6 +98,8 @@ public static class AdventOfCodeService
             return null;
         }
     }
+
+
 
     public static List<string> GetProblem(int year, int day, int part)
     {
@@ -117,7 +133,7 @@ public static class AdventOfCodeService
 
             return articles.Count > 1
                 ? articles[1].ChildNodes.Select(node => node.InnerText).ToList()
-                : new List<string>{ "part 2 not found!!" };
+                : new List<string> { "part 2 not found!!" };
 
 
         }
@@ -126,5 +142,87 @@ public static class AdventOfCodeService
             Console.WriteLine($"Failed to retrieve input! error: {e.Message}");
             return null;
         }
+    }
+
+    public static HtmlNode GetProblemHtml(int year, int day, int part)
+    {
+        try
+        {
+            using var webClient = new HttpClient();
+            var url = $"{BASE_URL}/{year}/day/{day}";
+
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(url),
+            };
+            request.Headers.Add("cookie", $"session={_sessionCookie}");
+            var response = webClient.Send(request);
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception($"input request returned: {response.StatusCode} - {response.ReasonPhrase}");
+            }
+
+            var content = response.Content.ReadAsStringAsync().Result;
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(content);
+
+            var articles = htmlDoc.DocumentNode.SelectNodes("//article");
+
+            if (articles.Count < part)
+            {
+                return null;
+            }
+
+            return articles[part - 1];
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to retrieve input! error: {e.Message}");
+            return null;
+        }
+    }
+
+    public static void Print(this HtmlNode html)
+    {
+        var table = new Table().AddColumn("");
+
+        foreach (var node in html.ChildNodes)
+        {
+            switch (node.Name)
+            {
+                case "h2":
+                    table.AddRow(new Markup($"[underline invert]{node.InnerText}\n[/]").Centered());
+                    table.AddEmptyRow();
+                    break;
+                case "p":
+                    var content = new StringBuilder();
+                    foreach (var pNode in node.ChildNodes)
+                    {
+                        switch (pNode.Name)
+                        {
+                            case "#text":
+                                content.Append(pNode.InnerText);
+                                break;
+                            case "code":
+                                content.Append($"[plum1 on grey15] {pNode.InnerText} [/]");
+                                break;
+                            case "em":
+                                content.Append($"[gold1]{pNode.InnerText}[/]");
+                                break;
+
+                        }
+                    }
+                    table.AddRow(new Markup(content.ToString()));
+                    table.AddEmptyRow();
+                    break;
+                case "pre":
+                    var panel = new Panel(string.Join("\n", node.ChildNodes.Select(x => x.InnerText)));
+                    table.AddRow(panel);
+                    table.AddEmptyRow();
+                    break;
+            }
+        }
+        AnsiConsole.Write(table.HideHeaders().Expand());
     }
 }
