@@ -47,7 +47,12 @@ public struct Point
 
     public static Point operator +(Point a, Point b) => new Point(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
     public static Point operator -(Point a, Point b) => new Point(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-    public static Point operator *(Point a, int scalar) => new Point(a.X * scalar, a.Y *scalar, a.Z *scalar);
+    public static Point operator *(Point a, int scalar) => new Point(a.X * scalar, a.Y * scalar, a.Z * scalar);
+
+    public override string ToString()
+    {
+        return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
+    }
 }
 
 public class Line
@@ -68,9 +73,9 @@ public class Line
         var lineDirection = GetDirection();
         lineDirection.Normalize();
 
-        var points = new List<Point>{A};
+        var points = new List<Point> { A };
 
-        var distance = IsVertical() ? Math.Abs(A.Y - B.Y) :  Math.Abs(A.X - B.X);
+        var distance = IsVertical() ? Math.Abs(A.Y - B.Y) : Math.Abs(A.X - B.X);
         for (int i = 1; i < distance; i++)
         {
             points.Add(A + lineDirection * i);
@@ -86,4 +91,9 @@ public class Line
     public bool IsHorizontal() => A.Y == B.Y;
 
     public bool IsDiagonal() => Math.Abs(A.X - B.X) == Math.Abs(A.Y - B.Y);
+
+    public override string ToString()
+    {
+        return $"{nameof(A)}: {A}, {nameof(B)}: {B}";
+    }
 }

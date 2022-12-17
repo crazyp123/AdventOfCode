@@ -196,33 +196,55 @@ public static class AdventOfCodeService
                     table.AddEmptyRow();
                     break;
                 case "p":
-                    var content = new StringBuilder();
-                    foreach (var pNode in node.ChildNodes)
-                    {
-                        switch (pNode.Name)
-                        {
-                            case "#text":
-                                content.Append(pNode.InnerText);
-                                break;
-                            case "code":
-                                content.Append($"[plum1 on grey15] {pNode.InnerText} [/]");
-                                break;
-                            case "em":
-                                content.Append($"[gold1]{pNode.InnerText}[/]");
-                                break;
-
-                        }
-                    }
+                    var content = FormatSimple(node);
                     table.AddRow(new Markup(content.ToString()));
                     table.AddEmptyRow();
                     break;
+                case "ul":
+                    var list = FormatSimple(node);
+                    var listPanel = new Panel(new Markup(list.ToString()))
+                        .Border(BoxBorder.None)
+                        .PadLeft(3);
+
+                    table.AddRow(listPanel);
+                    table.AddEmptyRow();
+                    break;
                 case "pre":
-                    var panel = new Panel(string.Join("\n", node.ChildNodes.Select(x => x.InnerText)));
+                    var panel = new Panel(new Text(string.Join("\n", node.ChildNodes.Select(x => x.InnerText))));
                     table.AddRow(panel);
                     table.AddEmptyRow();
                     break;
             }
         }
         AnsiConsole.Write(table.HideHeaders().Expand());
+    }
+
+    private static StringBuilder FormatSimple(HtmlNode node)
+    {
+        var content = new StringBuilder();
+        foreach (var pNode in node.ChildNodes)
+        {
+            switch (pNode.Name)
+            {
+                case "#text":
+                    content.Append(pNode.InnerText);
+                    break;
+                case "code":
+                    content.Append($"[plum1 on grey15] {pNode.InnerText} [/]");
+                    break;
+                case "em":
+                    content.Append($"[gold1]{pNode.InnerText}[/]");
+                    break;
+                case "li":
+                case "ni":
+                    content.Append($"- {FormatSimple(pNode)}\n");
+                    break;
+                default:
+                    content.Append(pNode.InnerText);
+                    break;
+            }
+        }
+
+        return content;
     }
 }

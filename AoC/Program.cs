@@ -8,16 +8,15 @@ namespace AoC
 {
 
     /// QuickGraph cheatsheet: https://gist.github.com/Jbat1Jumper/95c77d216981e13952cf7f22e653d80d
-
+    ///https://github.com/KeRNeLith/QuikGraph/wiki
     class Program
     {
+        private static readonly int _todayYear = DateTime.Today.Year;
+        private static readonly int _todayDay = DateTime.Today.Day;
 
 
         static async Task Main()
         {
-            var todayYear = DateTime.Today.Year;
-            var todayDay = DateTime.Today.Day;
-
             AnsiConsole.Write(
                 new Panel(new FigletText("ADVENT OF CODE")
                     .Color(Color.Green1)
@@ -25,23 +24,27 @@ namespace AoC
                     .BorderColor(Color.Green1)
             );
 
-            AnsiConsole.Write(new Markup($"year: [invert]{todayYear}[/]").Centered());
-            AnsiConsole.Write(new Markup($"day: [green]{todayDay:D2}[/]\n").Centered());
+            AnsiConsole.Write(new Markup($"year: [invert]{_todayYear}[/]").Centered());
+            AnsiConsole.Write(new Markup($"day: [green]{_todayDay:D2}[/]\n").Centered());
 
+            await Loop();
+        }
 
+        private static async Task Loop()
+        {
             var choices = new[] { "Run part 1", "Run part 2", "Show today's puzzle", "Other day" }.ToList();
             var cmd = AnsiConsole.Prompt(new SelectionPrompt<string>().AddChoices(choices));
 
             switch (choices.IndexOf(cmd))
             {
                 case 0:
-                    await Run(todayYear, todayDay);
+                    await Run(_todayYear, _todayDay);
                     break;
                 case 1:
-                    await Run(todayYear, todayDay, 2);
+                    await Run(_todayYear, _todayDay, 2);
                     break;
                 case 2:
-                    ShowProblem(todayYear, todayDay, 1);
+                    ShowProblem(_todayYear, _todayDay, 1);
                     break;
                 case 3:
                     var (day, year, part) = PromptDayToRun();
@@ -55,7 +58,13 @@ namespace AoC
                     {
                         ShowProblem(year, day, part ?? 1);
                     }
+
                     break;
+            }
+
+            if (AnsiConsole.Confirm("Would you like to continue?"))
+            {
+                await Loop();
             }
         }
 
@@ -134,12 +143,6 @@ namespace AoC
         {
             var day = DateTime.Today.Day;
             var year = DateTime.Today.Year;
-
-            //var runToday = AnsiConsole.Confirm("Run current day?");
-            //if (runToday)
-            //{
-            //    return (day, year, null);
-            //}
 
             year = AnsiConsole.Ask<int>("Year", year);
             day = AnsiConsole.Ask("Day", day);

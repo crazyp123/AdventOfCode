@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AoC.Utils
 {
@@ -58,6 +60,12 @@ namespace AoC.Utils
             }
         }
 
+        public static Point Apply(this Point xy, Direction dir, int dist = 1)
+        {
+            var a = ApplyDir(xy.X, xy.Y, dir, dist);
+            return new Point(a.x, a.y);
+        }
+
         public static (int x, int y) Apply(this (int, int) xy, Direction dir, int dist = 1)
         {
             return ApplyDir(xy.Item1, xy.Item2, dir, dist);
@@ -111,6 +119,26 @@ namespace AoC.Utils
                     throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
             }
             return (newX, newY);
+        }
+
+        public static Point ToPoint(this (int x, int y) t)
+        {
+            return new Point(t.x, t.y);
+        }
+
+        public static List<Point> GetNeighbors(this Point p, int dist = 1)
+        {
+            return Directions.Select(dir => ApplyDir(p.X, p.Y, dir, dist).ToPoint()).ToList();
+        }
+
+        public static List<Point> GetDiagonalNeighbors(this Point p, int dist = 1)
+        {
+            return DirectionDiagonals.Select(dir => ApplyDir(p.X, p.Y, dir, dist).ToPoint()).ToList();
+        }
+
+        public static List<Point> GetAllNeighbors(this Point p, int dist = 1)
+        {
+            return GetNeighbors(p, dist).Concat(GetDiagonalNeighbors(p, dist)).ToList();
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using HtmlAgilityPack;
 using QuikGraph;
 
 namespace AoC.Utils
@@ -45,9 +46,29 @@ namespace AoC.Utils
             return Grid.GetNeighborCells(X, Y, dist);
         }
 
+        public GridCell<T>[] GetAllNeighbors(int dist = 1)
+        {
+            return Grid.GetAllNeighborCells(X, Y, dist);
+        }
+
+        public GridCell<T>[] GetDiagonalNeighbors(int dist = 1)
+        {
+            return Grid.GetDiagonalNeighborCells(X, Y, dist);
+        }
+
         public List<GridCell<T>> Flood(Func<GridCell<T>, bool> condition)
         {
             return Grid.Flood(X, Y, condition);
+        }
+
+        public bool IsOnEdge()
+        {
+            return X == 0 || Y == 0 || X == Grid.Width - 1 || Y == Grid.Height - 1;
+        }
+
+        public int Distance(GridCell<T> other)
+        {
+            return Calculations.ManhattanDistance(X, Y, other.X, other.Y);
         }
 
         protected bool Equals(GridCell<T> other)
@@ -67,6 +88,11 @@ namespace AoC.Utils
         {
             return HashCode.Combine(X, Y);
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Value)}: {Value}, {nameof(Metadata)}: {Metadata}";
+        }
     }
 
     public class Grid<T>
@@ -81,7 +107,7 @@ namespace AoC.Utils
         public Grid(int w, int h)
         {
             Data = new GridCell<T>[w, h];
-            Apply((x, y, cell) => AddCell(x,y,default));
+            Apply((x, y, cell) => AddCell(x, y, default));
         }
 
         public Grid(List<List<T>> data)
@@ -114,6 +140,12 @@ namespace AoC.Utils
             return GetCell(pos.x, pos.y);
         }
 
+        public GridCell<T> GetNeighborCell(GridCell<T> cell, Direction dir, int step = 1)
+        {
+            var pos = DirectionUtils.ApplyDir(cell.X, cell.Y, dir, step);
+            return GetCell(pos.x, pos.y);
+        }
+
         public GridCell<T> GetNeighborCell(int x, int y, DirectionDiagonal dir, int step = 1)
         {
             var pos = DirectionUtils.ApplyDir(x, y, dir, step);
@@ -142,12 +174,31 @@ namespace AoC.Utils
 
         public GridCell<T>[] GetAllNeighborCells(int x, int y, int step = 1)
         {
-            return GetNeighborCells(x, y, step).Concat(GetDiagonalNeighborCells(x,y,step)).ToArray();
+            return GetNeighborCells(x, y, step).Concat(GetDiagonalNeighborCells(x, y, step)).ToArray();
         }
 
         public GridCell<T>[] GetAllNeighborCells(GridCell<T> cell, int step = 1)
         {
             return GetNeighborCells(cell, step).Concat(GetDiagonalNeighborCells(cell, step)).ToArray();
+        }
+
+        /// <summary>
+        /// TO BE REVIEWED
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        [Obsolete]
+        public GridCell<T>[] GetAllToEdge(GridCell<T> cell, Direction dir)
+        {
+            return dir switch
+            {
+                Direction.Down => GetCol(cell.X)[(cell.Y + 1)..],
+                Direction.Up => cell.Y > 0 ? GetCol(cell.X)[..cell.Y].Reverse().ToArray() : Array.Empty<GridCell<T>>(),
+                Direction.Right => GetRow(cell.Y)[(cell.X + 1)..],
+                Direction.Left => cell.X > 0 ? GetRow(cell.Y)[..cell.X].Reverse().ToArray() : Array.Empty<GridCell<T>>(),
+                _ => default
+            };
         }
 
         public void SetRow(int y, T[] row)
@@ -257,7 +308,7 @@ namespace AoC.Utils
 
         public void SetCell(int x, int y, GridCell<T> cell)
         {
-            Data[x,y] = cell;
+            Data[x, y] = cell;
         }
 
         public void Set(int x, int y, T item)
@@ -293,8 +344,8 @@ namespace AoC.Utils
         public void Apply(Action<GridCell<T>> action)
         {
             for (int x = 0; x < Width; x++)
-            for (int y = 0; y < Height; y++)
-                action(GetCell(x, y));
+                for (int y = 0; y < Height; y++)
+                    action(GetCell(x, y));
         }
 
         public IEnumerable<Z> MapCells<Z>(Func<int, int, GridCell<T>, Z> mapFunc)
@@ -349,6 +400,56 @@ namespace AoC.Utils
             return result;
         }
 
+        public GridCell<T> Move(GridCell<T> cell, Direction dir, int distance = 1)
+        {
+            var x = cell.X;
+            var y = cell.Y;
+            switch (dir)
+            {
+                case Direction.Up:
+                    y += distance;
+                    break;
+                case Direction.Down:
+                    y -= distance;
+                    break;
+                case Direction.Left:
+                    x -= distance;
+                    break;
+                case Direction.Right:
+                    x += distance;
+                    break;
+            }
+
+            return GetCell(x, y);
+        }
+
+        public void MoveSet(GridCell<T> cell, Direction dir, int distance, Action<GridCell<T>> action)
+        {
+            var x = cell.X;
+            var y = cell.Y;
+            for (int i = 1; i <= distance; i++)
+            {
+                var newX = x;
+                var newY = y;
+                switch (dir)
+                {
+                    case Direction.Up:
+                        newY = y + 1;
+                        break;
+                    case Direction.Down:
+                        newY = y - 1;
+                        break;
+                    case Direction.Left:
+                        newX = x - 1;
+                        break;
+                    case Direction.Right:
+                        newX = x + 1;
+                        break;
+                }
+                action(Data[newX, newY]);
+            }
+        }
+
         public void MoveSet(int x, int y, Direction dir, int distance, Func<int, int, T, T> action)
         {
             for (int i = 1; i <= distance; i++)
@@ -398,7 +499,7 @@ namespace AoC.Utils
                     var x0 = vertically ? (foldSide == 0 ? width - 1 - x : x) : x;
                     var y0 = !vertically ? (foldSide == 0 ? height - 1 - y : y) : y;
 
-                    var x1 = vertically ? (foldSide == 0 ? width + x : width + width -1 - x) : x;
+                    var x1 = vertically ? (foldSide == 0 ? width + x : width + width - 1 - x) : x;
                     var y1 = !vertically ? (foldSide == 0 ? height + y : height + height - 1 - y) : y;
 
                     if (foldOnItem)
@@ -434,21 +535,40 @@ namespace AoC.Utils
             return sb.ToString();
         }
 
-        public AdjacencyGraph<GridCell<T>, SEquatableEdge<GridCell<T>>> BuildAdjacencyGraph()
+        public Image ToImage(Func<GridCell<T>, KnownColor> getCellColor)
+        {
+            var image = new Bitmap(Width, Height);
+
+            Cells.ForEach(cell =>
+            {
+                var kc = getCellColor(cell);
+                var color = Color.FromKnownColor(kc);
+                image.SetPixel(cell.X, cell.Y, color);
+            });
+
+            return image;
+        }
+
+        public AdjacencyGraph<GridCell<T>, SEquatableEdge<GridCell<T>>> BuildAdjacencyGraph(bool allowDiagonal = false)
+        {
+            return BuildAdjacencyGraph(cell => allowDiagonal ? cell.GetAllNeighbors() : cell.GetNeighbors());
+        }
+
+        public AdjacencyGraph<GridCell<T>, SEquatableEdge<GridCell<T>>> BuildAdjacencyGraph(Func<GridCell<T>, IEnumerable<GridCell<T>>> expand)
         {
             var graph = new AdjacencyGraph<GridCell<T>, SEquatableEdge<GridCell<T>>>();
 
             foreach (var cell in Cells)
             {
-                foreach (var neighbor in cell.GetNeighbors())
+                var neighbors = expand(cell);
+                foreach (var neighbor in neighbors)
                 {
-                    if(neighbor is null) continue;
+                    if (neighbor is null) continue;
                     graph.AddVerticesAndEdge(new SEquatableEdge<GridCell<T>>(cell, neighbor));
                 }
             }
 
             return graph;
         }
-
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace AoC.Utils;
+﻿using System;
+using System.Linq;
+
+namespace AoC.Utils;
 
 public static class Alphabet
 {

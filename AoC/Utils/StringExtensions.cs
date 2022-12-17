@@ -50,8 +50,28 @@ public static class StringExtensions
     {
         var x = i.AsListOf<string>()
             .SplitBy((s, i1) => s.Equals(separator));
-        
-            return x.Select(group => group.Select(ConvertTo<T>).ToList())
-            .ToList();
+
+        return x.Select(group => group.Select(ConvertTo<T>).ToList())
+        .ToList();
+    }
+
+    public static int AsInt(this string i)
+    {
+        return int.Parse(i);
+    }
+
+    public static long AsLong(this string i)
+    {
+        return long.Parse(i);
+    }
+
+    public static ulong AsULong(this string i)
+    {
+        return ulong.Parse(i);
+    }
+
+    public static int AsInt(this char i)
+    {
+        return i.ToString().AsInt();
     }
 }
