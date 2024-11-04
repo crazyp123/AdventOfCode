@@ -20,6 +20,16 @@ namespace AoC.Utils
         BottomRight
     }
 
+    public enum Direction3D
+    {
+        Up,
+        Down,
+        Left,
+        Right,
+        Back,
+        Forward
+    }
+
     public static class DirectionUtils
     {
         public static readonly Direction[] Directions = new[]
@@ -36,6 +46,16 @@ namespace AoC.Utils
             DirectionDiagonal.TopRight,
             DirectionDiagonal.BottomLeft,
             DirectionDiagonal.BottomRight
+        };
+
+        public static readonly Direction3D[] Directions3D = new[]
+        {
+            Direction3D.Up,
+            Direction3D.Down,
+            Direction3D.Left,
+            Direction3D.Right,
+            Direction3D.Back,
+            Direction3D.Forward
         };
 
         public static Direction ToDirection(this char c)
@@ -91,6 +111,36 @@ namespace AoC.Utils
                     break;
             }
             return (newX, newY);
+        }
+
+        public static (int x, int y, int z) ApplyDir(int x, int y, int z, Direction3D dir, int dist = 1)
+        {
+            var newX = x;
+            var newY = y;
+            var newZ = z;
+
+            switch (dir)
+            {
+                case Direction3D.Up:
+                    newY = y + dist;
+                    break;
+                case Direction3D.Down:
+                    newY = y - dist;
+                    break;
+                case Direction3D.Left:
+                    newX = x - dist;
+                    break;
+                case Direction3D.Right:
+                    newX = x + dist;
+                    break;
+                case Direction3D.Back:
+                    newZ = z - dist;
+                    break;
+                case Direction3D.Forward:
+                    newZ = z + dist;
+                    break;
+            }
+            return (newX, newY, newZ);
         }
 
         public static (int x, int y) ApplyDir(int x, int y, DirectionDiagonal dir, int dist = 1)
