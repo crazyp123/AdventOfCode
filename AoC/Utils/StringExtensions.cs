@@ -29,6 +29,12 @@ public static class StringExtensions
         return i.Split(separator, options).Select(ConvertTo<T>).ToList();
     }
 
+    public static List<List<T>> AsListOfLists<T>(this string i, string separator = " ",
+        StringSplitOptions options = StringSplitOptions.None)
+    {
+        return i.AsListOf<string>().Select(s => s.AsListOf<T>(separator)).ToList();
+    }
+
     public static T ConvertTo<T>(string s)
     {
         try
@@ -52,7 +58,7 @@ public static class StringExtensions
             .SplitBy((s, i1) => s.Equals(separator));
 
         return x.Select(group => group.Select(ConvertTo<T>).ToList())
-        .ToList();
+            .ToList();
     }
 
     public static int AsInt(this string i)
