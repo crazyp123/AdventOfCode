@@ -6,18 +6,15 @@ namespace AoC.Utils;
 
 public static class CollectionExtensions
 {
-    private static Random rng = new Random();
+    private static readonly Random rng = new();
 
     /// <summary>
-    /// Applies a function on each element and returns the modified list
+    ///     Applies a function on each element and returns the modified list
     /// </summary>
     public static List<T> Apply<T>(this IEnumerable<T> list, Action<T> apply)
     {
         var enumerable = list.ToList();
-        foreach (var x in enumerable)
-        {
-            apply(x);
-        }
+        foreach (var x in enumerable) apply(x);
         return enumerable;
     }
 
@@ -50,21 +47,24 @@ public static class CollectionExtensions
         }
     }
 
-    private static void Swap<T>(ref T a, ref T b) => (a, b) = (b, a);
+    private static void Swap<T>(ref T a, ref T b)
+    {
+        (a, b) = (b, a);
+    }
 
     public static void Shuffle<T>(this IList<T> list)
     {
-        int n = list.Count;
+        var n = list.Count;
         while (n > 1)
         {
             n--;
-            int k = rng.Next(n + 1);
+            var k = rng.Next(n + 1);
             (list[k], list[n]) = (list[n], list[k]);
         }
     }
 
     /// <summary>
-    /// Splits a list in groups of equal parts of size <see cref="groupSize"/>
+    ///     Splits a list in groups of equal parts of size <see cref="groupSize" />
     /// </summary>
     /// <returns></returns>
     public static List<List<T>> SplitInEqualGroups<T>(this List<T> list, int groupSize)
@@ -80,11 +80,12 @@ public static class CollectionExtensions
                 next = new List<T>();
             }
         }
+
         return groups;
     }
 
     /// <summary>
-    /// Splits a list into multiple using a separator item (excluded).
+    ///     Splits a list into multiple using a separator item (excluded).
     /// </summary>
     public static List<List<T>> SplitBy<T>(this List<T> list, Func<T, int, bool> separator)
     {
@@ -97,7 +98,9 @@ public static class CollectionExtensions
             {
                 next.Add(r);
                 continue;
-            };
+            }
+
+            ;
 
             groups.Add(next);
             next = new List<T>();
@@ -107,10 +110,11 @@ public static class CollectionExtensions
     }
 
     /// <summary>
-    /// Splits a list into multiple using a separator item and including separating item.
+    ///     Splits a list into multiple using a separator item and including separating item.
     /// </summary>
     /// <param name="splitAfterSeparator">set to true if the separator indicates the beginning of the new group</param>
-    public static List<List<T>> SplitByAndIncluding<T>(this List<T> list, Func<T, int, bool> separator, bool splitAfterSeparator)
+    public static List<List<T>> SplitByAndIncluding<T>(this List<T> list, Func<T, int, bool> separator,
+        bool splitAfterSeparator)
     {
         var groups = new List<List<T>>();
         var next = new List<T>();
@@ -121,22 +125,25 @@ public static class CollectionExtensions
             {
                 next.Add(r);
                 continue;
-            };
-
-            if (splitAfterSeparator)
-            {
-                next.Add(r);
             }
+
+            ;
+
+            if (splitAfterSeparator) next.Add(r);
 
             groups.Add(next);
             next = new List<T>();
 
-            if (!splitAfterSeparator)
-            {
-                next.Add(r);
-            }
+            if (!splitAfterSeparator) next.Add(r);
         }
 
         return groups;
+    }
+
+    public static List<T> RemoveAtIndex<T>(this List<T> list, int index)
+    {
+        var copy = list.ToList();
+        copy.RemoveAt(index);
+        return list;
     }
 }

@@ -27,15 +27,7 @@ public class Day02 : Day
 
     public override object Result2()
     {
-        return _reports.Count(r =>
-        {
-            return IsSafe(r) || r.Select((i, x) =>
-            {
-                var copy = r.ToList();
-                copy.RemoveAt(x);
-                return IsSafe(copy);
-            }).Any(b => b);
-        });
+        return _reports.Count(r => IsSafe(r) || r.Select((i, x) => IsSafe(r.RemoveAtIndex(x))).Any(b => b));
     }
 
     private bool IsSafe(List<int> r)
