@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using QuikGraph;
 
 namespace AoC.Utils;
@@ -464,21 +466,34 @@ public class Grid<T>
         return graph;
     }
 
-    public List<GridCell<T>> MatchKernels(Grid<T> kernel, int startX = 0, int startY = 0)
+    public List<List<GridCell<T>>> MatchKernels(Grid<T> kernel, int startX = 0, int startY = 0)
     {
-        return Cells.Where(CheckKernel).ToList();
+        var result = new ConcurrentBag<List<GridCell<T>>>();
 
-        bool CheckKernel(GridCell<T> cell)
+        Parallel.ForEach(Cells, cell =>
         {
+            var (match, list) = CheckKernel(cell);
+            if (match) result.Add(list);
+        });
+
+        return result.ToList();
+
+        (bool, List<GridCell<T>> ) CheckKernel(GridCell<T> cell)
+        {
+            var list = new List<GridCell<T>>();
+
             for (var x = 0; x < kernel.Width; x++)
             for (var y = 0; y < kernel.Height; y++)
             {
                 var kCell = kernel.GetValue(x, y);
-                var cCell = GetValue(cell.X + x, cell.Y + y);
-                if (!EqualityComparer<T>.Default.Equals(kCell, default) && !Equals(cCell, kCell)) return false;
+                var cCell = GetCell(cell.X + x, cell.Y + y);
+                if (cCell is null ||
+                    (!EqualityComparer<T>.Default.Equals(kCell, default) && !Equals(cCell.Value, kCell)))
+                    return (false, null);
+                list.Add(cCell);
             }
 
-            return true;
+            return (true, list);
         }
     }
 }

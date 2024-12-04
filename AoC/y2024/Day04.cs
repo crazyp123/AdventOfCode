@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using AoC.Utils;
 
@@ -75,12 +76,9 @@ MXMXAXMASX".Replace("\r", "");
         kernel3.SetRow(1, [default, 'A', default]);
         kernel3.SetRow(2, ['S', default, 'M']);
 
-        // 40151 too high
-        // 1980 too high
-        // 996 too low
-        return grid.MatchKernels(kernel).Count +
-               grid.MatchKernels(kernel1).Count +
-               grid.MatchKernels(kernel2).Count +
-               grid.MatchKernels(kernel3).Count;
+        var matches = grid.MatchKernels(kernel).Concat(grid.MatchKernels(kernel1)).Concat(grid.MatchKernels(kernel2))
+            .Concat(grid.MatchKernels(kernel3)).ToList();
+
+        return matches.Count();
     }
 }
