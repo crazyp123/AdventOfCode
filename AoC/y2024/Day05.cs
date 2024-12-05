@@ -63,19 +63,16 @@ public class Day05 : Day
 
     private List<int> Order(List<int> list)
     {
-        var buffer = list.ToList();
-        var orderded = new List<int>();
-
+        var result = new List<int>();
         var rules = _orderRules.Where(t => list.Contains(t.Item1)).ToList();
-
-        do
+        foreach (var _ in list)
         {
-            var next = list.First(page => rules.Where(t => !orderded.Contains(t.Item1)).All(t => t.Item2 != page));
-            list.Remove(next);
-            orderded.Add(next);
-        } while (buffer.Count != orderded.Count);
+            var next = list.Except(result)
+                .First(page => rules.Where(t => !result.Contains(t.Item1)).All(t => t.Item2 != page));
+            result.Add(next);
+        }
 
-        return orderded;
+        return result;
     }
 
     private bool InOrder(List<int> list)
