@@ -27,7 +27,16 @@ public static class AdventOfCodeService
 
     public static string GetInput(int year, int day)
     {
-        return GetInputAsync(year, day).Result;
+        if (File.Exists($"input/{year}/day{day}.txt")) return File.ReadAllText($"input/{year}/day{day}.txt");
+        var input = GetInputAsync(year, day).Result;
+
+        if (input != null)
+        {
+            Directory.CreateDirectory($"input/{year}");
+            File.WriteAllText($"input/{year}/day{day}.txt", input);
+        }
+
+        return input;
     }
 
     public static async Task<string> GetInputAsync(int year, int day)
@@ -39,15 +48,13 @@ public static class AdventOfCodeService
 
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(url),
+                RequestUri = new Uri(url)
             };
             request.Headers.Add("cookie", $"session={_sessionCookie}");
             var response = webClient.Send(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
-            {
                 throw new Exception($"input request returned: {response.StatusCode} - {response.ReasonPhrase}");
-            }
 
             var res = await response.Content.ReadAsStringAsync();
             return res.Trim();
@@ -62,6 +69,29 @@ public static class AdventOfCodeService
     public static string PostAnswer(int year, int day, int part, string value)
     {
         return PostAnswerAsync(year, day, part, value).Result;
+    }
+
+    public static void SaveWrongAnswer(int year, int day, int part, string value)
+    {
+        var wrongAnswers = new List<string>();
+        var path = $"wrong/{year}/day{day}-p{part}.txt";
+        if (File.Exists(path)) wrongAnswers = File.ReadAllLines(path).ToList();
+        wrongAnswers.Add(value);
+        Directory.CreateDirectory($"wrong/{year}");
+        File.WriteAllLines(path, wrongAnswers);
+    }
+
+    public static List<string> GetWrongAnswers(int year, int day, int part)
+    {
+        var path = $"wrong/{year}/day{day}-p{part}.txt";
+        if (File.Exists(path)) return File.ReadAllLines(path).ToList();
+        return new List<string>();
+    }
+
+    public static void DeleteWrongAnswers(int year, int day, int part)
+    {
+        var path = $"wrong/{year}/day{day}-p{part}.txt";
+        if (File.Exists(path)) File.Delete(path);
     }
 
     public static async Task<string> PostAnswerAsync(int year, int day, int part, string value)
@@ -99,51 +129,6 @@ public static class AdventOfCodeService
         }
     }
 
-
-
-    public static List<string> GetProblem(int year, int day, int part)
-    {
-        try
-        {
-            using var webClient = new HttpClient();
-            var url = $"{BASE_URL}/{year}/day/{day}";
-
-            var request = new HttpRequestMessage
-            {
-                RequestUri = new Uri(url),
-            };
-            request.Headers.Add("cookie", $"session={_sessionCookie}");
-            var response = webClient.Send(request);
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new Exception($"input request returned: {response.StatusCode} - {response.ReasonPhrase}");
-            }
-
-            var content = response.Content.ReadAsStringAsync().Result;
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(content);
-
-            var articles = htmlDoc.DocumentNode.SelectNodes("//article");
-
-            if (part == 1)
-            {
-                return articles.First().ChildNodes.Select(node => node.InnerText).ToList();
-            }
-
-            return articles.Count > 1
-                ? articles[1].ChildNodes.Select(node => node.InnerText).ToList()
-                : new List<string> { "part 2 not found!!" };
-
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Failed to retrieve input! error: {e.Message}");
-            return null;
-        }
-    }
-
     public static HtmlNode GetProblemHtml(int year, int day, int part)
     {
         try
@@ -153,15 +138,13 @@ public static class AdventOfCodeService
 
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(url),
+                RequestUri = new Uri(url)
             };
             request.Headers.Add("cookie", $"session={_sessionCookie}");
             var response = webClient.Send(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
-            {
                 throw new Exception($"input request returned: {response.StatusCode} - {response.ReasonPhrase}");
-            }
 
             var content = response.Content.ReadAsStringAsync().Result;
             var htmlDoc = new HtmlDocument();
@@ -169,10 +152,7 @@ public static class AdventOfCodeService
 
             var articles = htmlDoc.DocumentNode.SelectNodes("//article");
 
-            if (articles.Count < part)
-            {
-                return null;
-            }
+            if (articles.Count < part) return null;
 
             return articles[part - 1];
         }
@@ -188,7 +168,6 @@ public static class AdventOfCodeService
         var table = new Table().AddColumn("");
 
         foreach (var node in html.ChildNodes)
-        {
             switch (node.Name)
             {
                 case "h2":
@@ -215,7 +194,7 @@ public static class AdventOfCodeService
                     table.AddEmptyRow();
                     break;
             }
-        }
+
         AnsiConsole.Write(table.HideHeaders().Expand());
     }
 
@@ -223,7 +202,6 @@ public static class AdventOfCodeService
     {
         var content = new StringBuilder();
         foreach (var pNode in node.ChildNodes)
-        {
             switch (pNode.Name)
             {
                 case "#text":
@@ -243,7 +221,6 @@ public static class AdventOfCodeService
                     content.Append(pNode.InnerText);
                     break;
             }
-        }
 
         return content;
     }

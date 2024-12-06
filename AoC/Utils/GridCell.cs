@@ -36,6 +36,11 @@ public class GridCell<T>
         Metadata = metadata;
     }
 
+    public GridCell<T> Clone()
+    {
+        return new GridCell<T>(Grid, X, Y, Value, Metadata);
+    }
+
     public GridCell<T>[] GetNeighbors(int dist = 1)
     {
         return Grid.GetNeighborCells(X, Y, dist);
@@ -75,7 +80,7 @@ public class GridCell<T>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((GridCell<T>)obj);
     }
 

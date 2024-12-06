@@ -32,6 +32,16 @@ public class Grid<T>
 
     public List<GridCell<T>> Cells => GetRows().SelectMany(r => r).ToList();
 
+
+    public bool BottomLeftOrigin = false;
+
+    public Grid<T> Clone()
+    {
+        var grid = new Grid<T>(Width, Height);
+        grid.SetRows(GetRows().Select(row => row.Select(cell => cell.Value).ToList()).ToList());
+        return grid;
+    }
+
     public GridCell<T> GetCell(int x, int y)
     {
         if (x >= Width || y >= Height || x < 0 || y < 0) return null;
@@ -297,10 +307,10 @@ public class Grid<T>
         switch (dir)
         {
             case Direction.Up:
-                y += distance;
+                y += BottomLeftOrigin ? -distance : distance;
                 break;
             case Direction.Down:
-                y -= distance;
+                y -= BottomLeftOrigin ? -distance : distance;
                 break;
             case Direction.Left:
                 x -= distance;

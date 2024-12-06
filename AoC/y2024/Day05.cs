@@ -63,8 +63,8 @@ public class Day05 : Day
 
     private List<int> Order(List<int> list)
     {
-        var result = new List<int>();
         var rules = _orderRules.Where(t => list.Contains(t.Item1)).ToList();
+        var result = new List<int>();
         foreach (var _ in list)
         {
             var next = list.Except(result)
