@@ -37,19 +37,4 @@ public static class ImageUtils
 
         return gifFilename;
     }
-
-    public static Image ScaleUp(this Image originalImage, int scale)
-    {
-        var newWidth = originalImage.Width * scale;
-        var newHeight = originalImage.Height * scale;
-        var scaledImage = new Bitmap(newWidth, newHeight);
-
-        using (var graphics = Graphics.FromImage(scaledImage))
-        {
-            graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            graphics.DrawImage(originalImage, new Rectangle(0, 0, newWidth, newHeight));
-        }
-
-        return scaledImage;
-    }
 }

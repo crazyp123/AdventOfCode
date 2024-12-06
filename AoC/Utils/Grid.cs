@@ -439,15 +439,17 @@ public class Grid<T>
         return sb.ToString();
     }
 
-    public Image ToImage(Func<GridCell<T>, KnownColor> getCellColor)
+    public Image ToImage(Func<GridCell<T>, KnownColor> getCellColor, int scale = 1)
     {
-        var image = new Bitmap(Width, Height);
+        var image = new Bitmap(Width * scale, Height * scale);
 
         Cells.ForEach(cell =>
         {
             var kc = getCellColor(cell);
             var color = Color.FromKnownColor(kc);
-            image.SetPixel(cell.X, cell.Y, color);
+            for (var x = 0; x < scale; x++)
+            for (var y = 0; y < scale; y++)
+                image.SetPixel(cell.X * scale + x, cell.Y * scale + y, color);
         });
 
         return image;
