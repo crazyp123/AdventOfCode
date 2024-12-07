@@ -23,19 +23,18 @@ public class Day07 : Day
         _equations = Input.AsListOf<string>().Select(s =>
         {
             var parts = s.Split(":", StringSplitOptions.TrimEntries);
-            var result = ulong.Parse(parts[0]);
-            var numbers = parts[1].AsListOf<ulong>(" ");
+            var result = long.Parse(parts[0]);
+            var numbers = parts[1].AsListOf<long>(" ");
             return new Equation(numbers, result);
         }).ToList();
-
     }
 
     private class Equation
     {
-        public ulong[] Numbers;
-        public ulong Result;
+        public long[] Numbers;
+        public long Result;
 
-        public Equation(IEnumerable<ulong> numbers, ulong result)
+        public Equation(IEnumerable<long> numbers, long result)
         {
             Numbers = numbers.ToArray();
             Result = result;
@@ -43,50 +42,28 @@ public class Day07 : Day
 
         public bool Test(bool withCombine = false)
         {
-            if (withCombine) return GetResultsRecWithCombine(Numbers[0], Numbers[1..]);
-            return GetResultsRec(Numbers[0], Numbers[1..]);
+            return GetResultsRec(Numbers[0], Numbers[1..], withCombine);
         }
 
-        private bool GetResultsRec(ulong num, ulong[] nums)
+        private bool GetResultsRec(long num, long[] nums, bool withCombine = false)
         {
             var sum = num + nums[0];
             var product = num * nums[0];
+            var combine = $"{num}{nums[0]}".AsLong();
+            if (nums.Length == 1) return sum == Result || product == Result || (withCombine && combine == Result);
 
-            if (nums.Length == 1) return sum == Result || product == Result;
-
-            return GetResultsRec(sum, nums[1..]) || GetResultsRec(product, nums[1..]);
-        }
-
-        private bool GetResultsRecWithCombine(ulong num, ulong[] nums)
-        {
-            var sum = num + nums[0];
-            var product = num * nums[0];
-            var combine = $"{num}{nums[0]}".AsULong();
-            if (nums.Length == 1) return sum == Result || product == Result || combine == Result;
-
-            return GetResultsRecWithCombine(sum, nums[1..]) || GetResultsRecWithCombine(product, nums[1..]) ||
-                   GetResultsRecWithCombine(combine, nums[1..]);
+            return GetResultsRec(sum, nums[1..], withCombine) || GetResultsRec(product, nums[1..], withCombine) ||
+                   (withCombine && GetResultsRec(combine, nums[1..], true));
         }
     }
 
     public override object Result1()
     {
-        
-        return Sum(_equations.Where(equation => equation.Test()));
+        return _equations.Where(equation => equation.Test()).Sum(e => e.Result);
     }
 
     public override object Result2()
     {
-        return Sum(_equations.Where(equation => equation.Test(true)));    }
-
-    private ulong Sum(IEnumerable<Equation> list)
-    {
-        ulong res = 0;
-        foreach (var i in list)
-        {
-            res += i.Result;
-        }
-
-        return res;
+        return _equations.Where(equation => equation.Test(true)).Sum(e => e.Result);
     }
 }
