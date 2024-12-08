@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using AoC.Utils;
 
@@ -21,6 +22,7 @@ public class Day08 : Day
 
     public override object Result1()
     {
+        //   _grid.ToImage(cell => (cell.Value == '.' ? KnownColor.White : KnownColor.GreenYellow, cell.Value.ToString().Replace('.', default))).Save("C:\\SourceCode\\day8.png");
         return Count(1);
     }
 
@@ -56,6 +58,7 @@ public class Day08 : Day
                 step++;
             }
         }
+
 
         return antenodes.Count();
     }

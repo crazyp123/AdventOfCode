@@ -32,7 +32,7 @@ public class Day06 : Day
         var list = Input.AsListOf<string>().Select(s => s.ToList()).ToList();
         _grid = list.ToGrid();
         _grid.BottomLeftOrigin = true;
-        
+
         _guardPosition = _grid.Cells.Find(cell =>
             cell.Value == '>' || cell.Value == '<' || cell.Value == '^' || cell.Value == 'v');
         _guardDirection = GetDirection(_guardPosition.Value);
@@ -42,8 +42,8 @@ public class Day06 : Day
 
     public override object Result1()
     {
-        //   var images = Images(guardPosition, direction);
-        //   ImageUtils.CreateGif("C:\\SourceCode\\day6.gif", images, ImageUtils.Fps.Fps60);
+        //  var images = Images(_guardPosition, _guardDirection);
+        //  ImageUtils.CreateGif("C:\\SourceCode\\day6.gif", images, ImageUtils.Fps.Fps60);
         return Visited(_guardPosition, _guardDirection).Count;
     }
 
@@ -87,6 +87,8 @@ public class Day06 : Day
                 visited.Add(ToImage(next));
                 guardPosition = next;
             }
+
+            if (visited.Count == 100) break;
         }
 
         return visited;
@@ -102,7 +104,7 @@ public class Day06 : Day
                     '.' => KnownColor.White,
                     _ => KnownColor.Blue
                 };
-            }, 50);
+            });
         }
     }
 

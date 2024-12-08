@@ -444,20 +444,50 @@ public class Grid<T>
         return sb.ToString();
     }
 
-    public Image ToImage(Func<GridCell<T>, KnownColor> getCellColor, int scale = 1)
+    public Image ToImage(Action<Graphics, Rectangle, GridCell<T>> drawCell, int scale = 1)
     {
         var image = new Bitmap(Width * scale, Height * scale);
 
+        using var graphics = Graphics.FromImage(image);
+        graphics.Clear(Color.White);
+
         Cells.ForEach(cell =>
+        {
+            var rectangle = new Rectangle(cell.X * scale, cell.Y * scale, scale, scale);
+            graphics.DrawRectangle(new Pen(Color.Black, 2), rectangle);
+            drawCell(graphics, rectangle, cell);
+        });
+        graphics.Save();
+        graphics.Dispose();
+        return image;
+    }
+
+    public Image ToImage(Func<GridCell<T>, KnownColor> getCellColor, int scale = 1)
+    {
+        return ToImage((graphics, rectangle, cell) =>
         {
             var kc = getCellColor(cell);
             var color = Color.FromKnownColor(kc);
-            for (var x = 0; x < scale; x++)
-            for (var y = 0; y < scale; y++)
-                image.SetPixel(cell.X * scale + x, cell.Y * scale + y, color);
-        });
+            graphics.DrawRectangle(new Pen(Color.Black, 2), rectangle);
+            graphics.FillRectangle(new SolidBrush(color), rectangle);
+        }, scale);
+    }
 
-        return image;
+    public Image ToImage(Func<GridCell<T>, (KnownColor, string text)> getCellFill, int scale = 50, int fontSize = 22)
+    {
+        return ToImage((graphics, rectangle, cell) =>
+        {
+            var (kc, text) = getCellFill(cell);
+            var color = Color.FromKnownColor(kc);
+            graphics.DrawRectangle(new Pen(Color.Black, 2), rectangle);
+            graphics.FillRectangle(new SolidBrush(color), rectangle);
+            graphics.DrawString(text, new Font("Consolas", fontSize, FontStyle.Bold), Brushes.Black,
+                rectangle, new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                });
+        }, scale);
     }
 
     public AdjacencyGraph<GridCell<T>, SEquatableEdge<GridCell<T>>> BuildAdjacencyGraph(bool allowDiagonal = false)
