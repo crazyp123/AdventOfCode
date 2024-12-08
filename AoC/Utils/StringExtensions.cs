@@ -80,4 +80,9 @@ public static class StringExtensions
     {
         return i.ToString().AsInt();
     }
+
+    public static Grid<char> AsGrid(this string i)
+    {
+        return i.AsListOf<string>().Select(s => s.ToList()).ToList().ToGrid();
+    }
 }

@@ -48,6 +48,11 @@ public class Grid<T>
         return Data[x, y];
     }
 
+    public GridCell<T> GetCell(Point p)
+    {
+        return GetCell(p.X, p.Y);
+    }
+
     public T GetValue(int x, int y)
     {
         var cell = GetCell(x, y);

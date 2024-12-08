@@ -36,6 +36,11 @@ public class GridCell<T>
         Metadata = metadata;
     }
 
+    public Point ToPoint()
+    {
+        return new Point(X, Y);
+    }
+
     public GridCell<T> Clone()
     {
         return new GridCell<T>(Grid, X, Y, Value, Metadata);
@@ -71,7 +76,7 @@ public class GridCell<T>
         return Calculations.ManhattanDistance(X, Y, other.X, other.Y);
     }
 
-    protected bool Equals(GridCell<T> other)
+    public bool Equals(GridCell<T> other)
     {
         return X == other.X && Y == other.Y;
     }
