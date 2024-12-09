@@ -85,8 +85,9 @@ public class Day09 : Day
 
         foreach (var (value, count, ix) in blocksToMove)
         {
-            var empty = emptyBlocks.FirstOrDefault(t => t.count >= count);
-            if (empty == default) continue;
+            var emptyIx = emptyBlocks.FindIndex(t => t.count >= count && t.index < ix);
+            if (emptyIx == -1) continue;
+            var empty = emptyBlocks[emptyIx];
 
             for (var i = 0; i < count; i++)
             {
@@ -95,9 +96,9 @@ public class Day09 : Day
             }
 
             if (empty.count == count)
-                emptyBlocks.Remove(empty);
+                emptyBlocks.RemoveAt(emptyIx);
             else
-                emptyBlocks[emptyBlocks.IndexOf(empty)] = (null, empty.count - count, empty.index + count);
+                emptyBlocks[emptyIx] = (null, empty.count - count, empty.index + count);
         }
 
         return result.ToArray();
