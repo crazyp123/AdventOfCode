@@ -25,6 +25,7 @@
         <PackageReference Include="AnimatedGif" Version="1.0.5"/>
         <PackageReference Include="CloneExtensions" Version="1.4.2"/>
         <PackageReference Include="HtmlAgilityPack" Version="1.11.71"/>
+        <PackageReference Include="Memoizer.NETStandard" Version="2023.5.1.16"/>
         <PackageReference Include="NetTopologySuite.Core" Version="1.15.3"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="QuikGraph" Version="2.5.0"/>
