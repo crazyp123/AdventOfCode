@@ -78,7 +78,7 @@ internal class Program
                 AnsiConsole.WriteLine();
 
                 instance.Part2();
-                PromptPostAnswer(day, year, part, instance.Result(2));
+                PromptPostAnswer(day, year, 2, instance.Result(2));
                 break;
         }
     }
@@ -109,11 +109,13 @@ internal class Program
 
         if (wrongAnswers.Contains(value))
         {
-            AnsiConsole.MarkupLine($"[red]You've already tried this! Previous wrong answers: {string.Join(", ", wrongAnswers)}[/]\n");
+            AnsiConsole.MarkupLine(
+                $"[red]You've already tried this! Previous wrong answers: {string.Join(", ", wrongAnswers)}[/]\n");
             return false;
         }
-        
-        if (wrongAnswers.Any()) AnsiConsole.MarkupLine($"[yellow]Previous wrong answers: {string.Join(", ", wrongAnswers)}[/]");
+
+        if (wrongAnswers.Any())
+            AnsiConsole.MarkupLine($"[yellow]Previous wrong answers: {string.Join(", ", wrongAnswers)}[/]");
 
         AnsiConsole.MarkupLine($"Press [yellow]SPACE[/] to Submit or [yellow]ENTER[/] to Continue");
 

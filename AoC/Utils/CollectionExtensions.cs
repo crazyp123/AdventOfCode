@@ -106,6 +106,8 @@ public static class CollectionExtensions
             next = new List<T>();
         }
 
+        if (next.Any()) groups.Add(next);
+
         return groups;
     }
 

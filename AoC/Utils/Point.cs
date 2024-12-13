@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AoC.Utils;
 
@@ -45,9 +46,20 @@ public struct Point
         return HashCode.Combine(X, Y, Z);
     }
 
-    public static Point operator +(Point a, Point b) => new Point(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
-    public static Point operator -(Point a, Point b) => new Point(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
-    public static Point operator *(Point a, int scalar) => new Point(a.X * scalar, a.Y * scalar, a.Z * scalar);
+    public static Point operator +(Point a, Point b)
+    {
+        return new Point(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+    }
+
+    public static Point operator -(Point a, Point b)
+    {
+        return new Point(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    }
+
+    public static Point operator *(Point a, int scalar)
+    {
+        return new Point(a.X * scalar, a.Y * scalar, a.Z * scalar);
+    }
 
     public override string ToString()
     {
@@ -60,13 +72,18 @@ public class Line
     public Point A { get; set; }
     public Point B { get; set; }
 
+    public object Meta { get; set; }
+
     public Line(Point a, Point b)
     {
         A = a;
         B = b;
     }
 
-    Point GetDirection() => B - A;
+    private Point GetDirection()
+    {
+        return B - A;
+    }
 
     public Point[] GetPoints()
     {
@@ -76,21 +93,54 @@ public class Line
         var points = new List<Point> { A };
 
         var distance = IsVertical() ? Math.Abs(A.Y - B.Y) : Math.Abs(A.X - B.X);
-        for (int i = 1; i < distance; i++)
-        {
-            points.Add(A + lineDirection * i);
-        }
+        for (var i = 1; i < distance; i++) points.Add(A + lineDirection * i);
 
         points.Add(B);
 
         return points.ToArray();
     }
 
-    public bool IsVertical() => A.X == B.X;
+    public bool IsVertical()
+    {
+        return A.X == B.X;
+    }
 
-    public bool IsHorizontal() => A.Y == B.Y;
+    public bool IsHorizontal()
+    {
+        return A.Y == B.Y;
+    }
 
-    public bool IsDiagonal() => Math.Abs(A.X - B.X) == Math.Abs(A.Y - B.Y);
+    public bool IsDiagonal()
+    {
+        return Math.Abs(A.X - B.X) == Math.Abs(A.Y - B.Y);
+    }
+
+    public Line Join(Line other)
+    {
+        var newA = new[] { A, B }.Except(new[] { other.A, other.B }).FirstOrDefault();
+        var newB = new[] { other.A, other.B }.Except(new[] { A, B }).FirstOrDefault();
+        A = newA;
+        B = newB;
+        return this;
+    }
+
+    protected bool Equals(Line other)
+    {
+        return (A.Equals(other.A) && B.Equals(other.B)) || (A.Equals(other.B) && B.Equals(other.A));
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Line)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(A, B);
+    }
 
     public override string ToString()
     {
