@@ -19,12 +19,12 @@ public class Grid<T>
         Apply((x, y, cell) => AddCell(x, y, default));
     }
 
-    public Grid(List<List<T>> data)
+    public Grid(List<List<T>> data, bool bottomLeftOrigin = false)
     {
         var height = data.Count;
         var width = data[0].Count;
         Data = new GridCell<T>[width, height];
-        SetRows(data);
+        SetRows(data, bottomLeftOrigin);
     }
 
     public int Width => Data.GetLength(0);
@@ -149,9 +149,9 @@ public class Grid<T>
         for (var x = 0; x < Width; x++) Data[x, y] = new GridCell<T>(row[x], this, x, y);
     }
 
-    public void SetRows(List<List<T>> rows)
+    public void SetRows(List<List<T>> rows, bool startEnd = false)
     {
-        for (var y = 0; y < rows.Count; y++) SetRow(y, rows[y].ToArray());
+        for (var y = 0; y < rows.Count; y++) SetRow(startEnd ? rows.Count - y - 1 : y, rows[y].ToArray());
     }
 
     public void SetRow(int y, T[] row, object[] metadata)
@@ -542,5 +542,23 @@ public class Grid<T>
 
             return (true, list);
         }
+    }
+
+    public GridCell<T> Find(T c)
+    {
+        return Cells.FirstOrDefault(cell => Equals(cell.Value, c));
+    }
+
+    /// <summary>
+    /// Swaps the values of two cells
+    /// </summary>
+    public void SwapValue(GridCell<T> a, GridCell<T> b)
+    {
+        (a.Value, b.Value) = (b.Value, a.Value);
+    }
+
+    public override string ToString()
+    {
+        return Print(cell => cell.Value?.ToString());
     }
 }

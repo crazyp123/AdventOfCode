@@ -18,9 +18,9 @@ public static class CollectionExtensions
         return enumerable;
     }
 
-    public static Grid<T> ToGrid<T>(this List<List<T>> list)
+    public static Grid<T> ToGrid<T>(this List<List<T>> list, bool bottomLeftIs00 = false)
     {
-        return new Grid<T>(list);
+        return new Grid<T>(list, bottomLeftIs00);
     }
 
     public static IEnumerable<T[]> Permutations<T>(this IEnumerable<T> source)

@@ -81,8 +81,8 @@ public static class StringExtensions
         return i.ToString().AsInt();
     }
 
-    public static Grid<char> AsGrid(this string i)
+    public static Grid<char> AsGrid(this string i, bool bottomLeftOrigin = false)
     {
-        return i.AsListOf<string>().Select(s => s.ToList()).ToList().ToGrid();
+        return i.AsListOf<string>().Select(s => s.ToList()).ToList().ToGrid(bottomLeftOrigin);
     }
 }

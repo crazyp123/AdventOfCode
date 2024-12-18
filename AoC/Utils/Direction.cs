@@ -65,19 +65,14 @@ public static class DirectionUtils
 
     public static Direction ParseDir(char c)
     {
-        switch (c)
+        return c switch
         {
-            case 'D':
-                return Direction.Down;
-            case 'U':
-                return Direction.Up;
-            case 'L':
-                return Direction.Left;
-            case 'R':
-                return Direction.Right;
-            default:
-                throw new NotImplementedException();
-        }
+            'D' or 'v' => Direction.Down,
+            'U' or '^' => Direction.Up,
+            'L' or '<' => Direction.Left,
+            'R' or '>' => Direction.Right,
+            _ => throw new NotImplementedException()
+        };
     }
 
     public static Point Apply(this Point xy, Direction dir, int dist = 1)

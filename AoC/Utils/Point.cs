@@ -65,6 +65,18 @@ public struct Point
     {
         return $"{nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
     }
+
+    public Direction ToDirection()
+    {
+        return (X, Y) switch
+        {
+            (0, -1) => Direction.Up,
+            (0, 1) => Direction.Down,
+            (-1, 0) => Direction.Left,
+            (1, 0) => Direction.Right,
+            _ => default
+        };
+    }
 }
 
 public class Line
