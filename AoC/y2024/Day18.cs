@@ -51,6 +51,7 @@ public class Day18 : Day
     private string Find(int fromIx, int toIx)
     {
         var midIx = (toIx - fromIx) / 2 + fromIx;
+
         _grid.Apply(c => c.Value = 0);
         foreach (var t in _locations[..midIx]) _grid.Set(t.Item1, t.Item2, 1);
 
