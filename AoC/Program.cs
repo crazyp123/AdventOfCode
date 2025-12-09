@@ -11,7 +11,7 @@ namespace AoC;
 internal class Program
 {
     private static readonly int _todayYear = DateTime.Today.Year;
-    private static readonly int _todayDay = DateTime.Today.Day;
+    private static readonly int _todayDay = 1; //DateTime.Today.Day;
 
 
     private static async Task Main()
